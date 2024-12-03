@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+
+{% block title %}DEG Analysis{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sample-list {
+        max-height: 400px;
+        overflow-y: auto;
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .group-container {
+        min-height: 150px;
+        border: 2px dashed var(--secondary-color);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        background: rgba(52, 152, 219, 0.05);
+    }
+
+    .sample-item {
+        margin: 5px;
+        padding: 8px 15px;
+        background: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        cursor: move;
+        transition: all 0.2s;
+    }
+
+    .sample-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+
+    .group-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 5px;
+    }
+
+    .color-indicator {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .plot-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stats-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .drag-hint {
+        text-align: center;
+        color: #7f8c8d;
+        padding: 20px;
+        font-style: italic;
+    }
+
+    .group-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9em;
+        color: white;
+    }
+
+    #analysisResults {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    #analysisResults.show {
+        opacity: 1;
+    }
+
+    .result-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .summary-item {
+        text-align: center;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .summary-item h3 {
+        color: var(--secondary-color);
+        margin: 0;
+        font-size: 2em;
+    }
+
+    .summary-item p {
+        color: var(--text-color);
+        margin: 5px 0 0 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="animate__animated animate__fadeIn">
+    <h2 class="mb-4"><i class="fas fa-microscope"></i> Differential Expression Analysis</h2>
+
+    <!-- Group Assignment Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-layer-group"></i> Sample Group Assignment</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Group Creation -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Create New Group</h6>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="groupName" placeholder="Group name">
+                                <input type="color" class="form-control form-control-color" id="groupColor" value="#3498db">
+                                <button class="btn btn-primary" id="addGroup">
+                                    <i class="fas fa-plus"></i> Add Group
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="groupsContainer" class="mt-3">
+                        <!-- Groups will be added here -->
+                    </div>
+                </div>
+
+                <!-- Sample List -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">Available Samples</h6>
+                            <div id="sampleList" class="sample-list">
+                                <div class="drag-hint">
+                                    <i class="fas fa-arrows-alt"></i>
+                                    Drag samples to assign them to groups
+                                </div>
+                                <!-- Samples will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Controls -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-cogs"></i> Analysis Settings</h5>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    <label for="group1Select" class="form-label">Control Group</label>
+                    <select class="form-select" id="group1Select">
+                        <option value="">Select control group...</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="group2Select" class="form-label">Treatment Group</label>
+                    <select class="form-select" id="group2Select">
+                        <option value="">Select treatment group...</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100" id="runAnalysis">
+                        <i class="fas fa-play"></i> Run DEG Analysis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="analysisResults" style="display: none;">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Analysis Results</h5>
+            </div>
+            <div class="card-body">
+                <!-- Summary Statistics -->
+                <div class="result-summary">
+                    <div class="summary-item">
+                        <h3 id="totalGenes">-</h3>
+                        <p>Total Genes Analyzed</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="sigGenes">-</h3>
+                        <p>Significant DEGs</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="upRegulated">-</h3>
+                        <p>Up-regulated</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="downRegulated">-</h3>
+                        <p>Down-regulated</p>
+                    </div>
+                </div>
+
+                <!-- Plots -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="plot-container">
+                            <h6><i class="fas fa-chart-scatter"></i> Volcano Plot</h6>
+                            <img id="volcanoPlot" alt="Volcano Plot" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="plot-container">
+                            <h6><i class="fas fa-th"></i> Top DEGs Heatmap</h6>
+                            <img id="heatmapPlot" alt="Heatmap" class="img-fluid">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Results -->
+                <div class="text-center mt-4">
+                    <a href="/download_deg_results" class="btn btn-success btn-lg">
+                        <i class="fas fa-file-download"></i> Download DEG Results (CSV)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script>
+    // Group management
+    let groups = {};
+    
+    function updateGroupSelects() {
+        const groupNames = Object.keys(groups);
+        ['group1Select', 'group2Select'].forEach(selectId => {
+            const select = $(`#${selectId}`);
+            const currentValue = select.val();
+            select.empty().append('<option value="">Select group...</option>');
+            groupNames.forEach(name => {
+                select.append(new Option(name, name));
+            });
+            select.val(currentValue);
+        });
+    }
+
+    function createGroup(name, color) {
+        groups[name] = {
+            color: color,
+            samples: []
+        };
+
+        const groupHtml = `
+            <div class="card mb-3 animate__animated animate__fadeIn" id="group_${name}">
+                <div class="card-header" style="background-color: ${color}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="color-indicator" style="background-color: ${color}"></div>
+                            <h6 class="mb-0">${name}</h6>
+                        </div>
+                        <button class="btn btn-sm btn-danger remove-group" data-group="${name}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="group-container" data-group="${name}">
+                        <div class="drag-hint">Drop samples here</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $('#groupsContainer').append(groupHtml);
+        
+        new Sortable($(`.group-container[data-group="${name}"]`)[0], {
+            group: 'samples',
+            animation: 150,
+            onAdd: function(evt) {
+                const sampleId = evt.item.getAttribute('data-sample');
+                const groupName = evt.to.getAttribute('data-group');
+                groups[groupName].samples.push(sampleId);
+                $(evt.to).find('.drag-hint').hide();
+            },
+            onRemove: function(evt) {
+                const sampleId = evt.item.getAttribute('data-sample');
+                const groupName = evt.from.getAttribute('data-group');
+                groups[groupName].samples = groups[groupName].samples.filter(s => s !== sampleId);
+                if (groups[groupName].samples.length === 0) {
+                    $(evt.from).find('.drag-hint').show();
+                }
+            }
+        });
+
+        updateGroupSelects();
+    }
+
+    // Load sample data and initialize
+    $(document).ready(function() {
+        $.get('/get_sample_info', function(response) {
+            const sampleList = $('#sampleList');
+            response.samples.forEach(sample => {
+                sampleList.append(`
+                    <div class="sample-item" data-sample="${sample}">
+                        <i class="fas fa-grip-vertical me-2"></i>${sample}
+                    </div>
+                `);
+            });
+
+            new Sortable(sampleList[0], {
+                group: 'samples',
+                animation: 150
+            });
+        });
+
+        // Event handlers
+        $('#addGroup').click(function() {
+            const name = $('#groupName').val().trim();
+            const color = $('#groupColor').val();
+            
+            if (name && !groups[name]) {
+                createGroup(name, color);
+                $('#groupName').val('');
+            }
+        });
+
+        $(document).on('click', '.remove-group', function() {
+            const groupName = $(this).data('group');
+            $(`#group_${groupName}`).addClass('animate__animated animate__fadeOut').one(
+                'animationend', 
+                function() {
+                    $(this).remove();
+                    delete groups[groupName];
+                    updateGroupSelects();
+                }
+            );
+        });
+
+        $('#runAnalysis').click(function() {
+            const group1 = $('#group1Select').val();
+            const group2 = $('#group2Select').val();
+
+            if (!group1 || !group2) {
+                alert('Please select two groups for comparison');
+                return;
+            }
+
+            $(this).prop('disabled', true)
+                  .html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+
+            $.ajax({
+                url: '/run_deg_analysis',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    groups: groups,
+                    group1: group1,
+                    group2: group2
+                }),
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Update summary statistics
+                        $('#totalGenes').text(response.summary.total_genes);
+                        $('#sigGenes').text(response.summary.significant_genes);
+                        $('#upRegulated').text(response.summary.up_regulated || '-');
+                        $('#downRegulated').text(response.summary.down_regulated || '-');
+
+                        // Update plots
+                        $('#volcanoPlot').attr('src', 'data:image/png;base64,' + response.plots.volcano);
+                        $('#heatmapPlot').attr('src', 'data:image/png;base64,' + response.plots.heatmap);
+
+                        // Show results
+                        $('#analysisResults').show().addClass('show');
+
+                        // Scroll to results
+                        $('html, body').animate({
+                            scrollTop: $("#analysisResults").offset().top - 20
+                        }, 1000);
+                    }
+
+                    $('#runAnalysis').prop('disabled', false)
+                          .html('<i class="fas fa-play"></i> Run DEG Analysis');
+                },
+                error: function(xhr, status, error) {
+                    alert('Error running analysis: ' + (xhr.responseJSON?.error || error));
+                    $('#runAnalysis').prop('disabled', false)
+                          .html('<i class="fas fa-play"></i> Run DEG Analysis');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

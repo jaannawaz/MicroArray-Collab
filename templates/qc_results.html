@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}Quality Control Analysis{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    .quality-high {
+        background-color: rgba(40, 167, 69, 0.1);
+        border-left: 4px solid #28a745;
+    }
+
+    .quality-medium {
+        background-color: rgba(255, 193, 7, 0.1);
+        border-left: 4px solid #ffc107;
+    }
+
+    .quality-low {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-left: 4px solid #dc3545;
+    }
+
+    .plot-container {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .plot-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .loading-content {
+        text-align: center;
+    }
+
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 20px;
+    }
+
+    .metric-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 10px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .table {
+        margin: 0;
+    }
+
+    .recommendation-item {
+        padding: 10px 15px;
+        margin: 5px 0;
+        border-radius: 8px;
+        background: rgba(52, 152, 219, 0.1);
+        border-left: 4px solid #3498db;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+        <div class="spinner-border text-primary loading-spinner" role="status"></div>
+        <h4>Running Quality Control Analysis...</h4>
+        <p class="text-muted">This may take a few moments</p>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2><i class="fas fa-chart-bar"></i> Quality Control Analysis</h2>
+        </div>
+    </div>
+
+    <div id="qcResults" style="display: none;">
+        <!-- Quality Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">High Quality Samples</h5>
+                        <p id="highQualityCount" class="display-4">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Medium Quality Samples</h5>
+                        <p id="mediumQualityCount" class="display-4">0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card bg-danger text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Low Quality Samples</h5>
+                        <p id="lowQualityCount" class="display-4">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-lightbulb"></i> Recommendations</h5>
+            </div>
+            <div class="card-body">
+                <div id="recommendationsList"></div>
+            </div>
+        </div>
+
+        <!-- QC Plots -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line"></i> Quality Control Plots</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="plot-container">
+                            <h6>Expression Distribution</h6>
+                            <img id="boxplot" alt="Box Plot">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="plot-container">
+                            <h6>Density Distribution</h6>
+                            <img id="densityPlot" alt="Density Plot">
+                        </div>
+                    </div>
+                </div>
+                <div class="plot-container">
+                    <h6>Principal Component Analysis (PCA)</h6>
+                    <img id="pcaPlot" alt="PCA Plot">
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Quality Details -->
+        <div class="table-container">
+            <h5 class="mb-3"><i class="fas fa-table"></i> Sample Quality Details</h5>
+            <div class="table-responsive">
+                <table class="table table-hover" id="sampleQualityTable">
+                    <thead>
+                        <tr>
+                            <th>Sample</th>
+                            <th>Quality</th>
+                            <th>Quality Score</th>
+                            <th>Issues</th>
+                            <th>Total Counts</th>
+                            <th>Detected Genes</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Metrics Summary -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="metric-card">
+                    <h5>Gene Metrics Summary</h5>
+                    <div id="geneMetricsTable"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="metric-card">
+                    <h5>Sample Metrics</h5>
+                    <div id="sampleMetricsTable"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Automatically run QC analysis when page loads
+        runQCAnalysis();
+
+        function runQCAnalysis() {
+            $.ajax({
+                url: '/run_qc',
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(response) {
+                    updateQCResults(response);
+                    $('#loadingOverlay').fadeOut();
+                    $('#qcResults').fadeIn();
+                },
+                error: function(xhr, status, error) {
+                    alert('Error running QC analysis: ' + error);
+                    $('#loadingOverlay').fadeOut();
+                }
+            });
+        }
+
+        function updateQCResults(response) {
+            // Update quality counts
+            $('#highQualityCount').text(response.report.summary.high_quality_samples);
+            $('#mediumQualityCount').text(response.report.summary.medium_quality_samples);
+            $('#lowQualityCount').text(response.report.summary.low_quality_samples);
+
+            // Update recommendations
+            const recommendationsList = $('#recommendationsList');
+            recommendationsList.empty();
+            if (response.report.recommendations && response.report.recommendations.length > 0) {
+                response.report.recommendations.forEach(rec => {
+                    recommendationsList.append(`
+                        <div class="recommendation-item">
+                            <i class="fas fa-info-circle me-2"></i>${rec}
+                        </div>
+                    `);
+                });
+            }
+
+            // Update plots
+            $('#boxplot').attr('src', 'data:image/png;base64,' + response.plots.expression_dist);
+            $('#densityPlot').attr('src', 'data:image/png;base64,' + response.plots.total_counts_dist);
+            $('#pcaPlot').attr('src', 'data:image/png;base64,' + response.plots.pca);
+
+            // Update sample quality table
+            updateSampleQualityTable(response.report.sample_quality);
+
+            // Update metrics tables
+            updateMetricsTables(response.metrics);
+        }
+
+        function updateSampleQualityTable(sampleQuality) {
+            const tbody = $('#sampleQualityTable tbody');
+            tbody.empty();
+            
+            for (let sample in sampleQuality) {
+                const quality = sampleQuality[sample];
+                tbody.append(`
+                    <tr class="quality-${quality.quality.toLowerCase()}">
+                        <td>${sample}</td>
+                        <td>${quality.quality}</td>
+                        <td>${quality.score}</td>
+                        <td>${quality.issues.join(', ') || 'None'}</td>
+                        <td>${quality.metrics.total_counts.toLocaleString()}</td>
+                        <td>${quality.metrics.detected_genes.toLocaleString()}</td>
+                    </tr>
+                `);
+            }
+        }
+
+        function updateMetricsTables(metrics) {
+            // Update gene metrics table
+            let geneMetricsHtml = '<table class="table">';
+            geneMetricsHtml += '<thead><tr><th>Metric</th><th>Mean</th><th>Std</th><th>Min</th><th>Max</th></tr></thead><tbody>';
+            for (let metric in metrics.gene_metrics_summary) {
+                const stats = metrics.gene_metrics_summary[metric];
+                geneMetricsHtml += `
+                    <tr>
+                        <td>${metric}</td>
+                        <td>${stats.mean.toFixed(3)}</td>
+                        <td>${stats.std.toFixed(3)}</td>
+                        <td>${stats.min.toFixed(3)}</td>
+                        <td>${stats.max.toFixed(3)}</td>
+                    </tr>
+                `;
+            }
+            geneMetricsHtml += '</tbody></table>';
+            $('#geneMetricsTable').html(geneMetricsHtml);
+
+            // Update sample metrics table
+            let sampleMetricsHtml = '<table class="table">';
+            sampleMetricsHtml += '<thead><tr><th>Sample</th><th>Total Counts</th><th>Detected Genes</th><th>Mean Exp.</th><th>Median Exp.</th><th>Std Exp.</th></tr></thead><tbody>';
+            const samples = Object.keys(metrics.sample_metrics.total_counts);
+            for (let sample of samples) {
+                sampleMetricsHtml += `
+                    <tr>
+                        <td>${sample}</td>
+                        <td>${metrics.sample_metrics.total_counts[sample].toFixed(0)}</td>
+                        <td>${metrics.sample_metrics.detected_genes[sample]}</td>
+                        <td>${metrics.sample_metrics.mean_expression[sample].toFixed(3)}</td>
+                        <td>${metrics.sample_metrics.median_expression[sample].toFixed(3)}</td>
+                        <td>${metrics.sample_metrics.std_expression[sample].toFixed(3)}</td>
+                    </tr>
+                `;
+            }
+            sampleMetricsHtml += '</tbody></table>';
+            $('#sampleMetricsTable').html(sampleMetricsHtml);
+        }
+    });
+</script>
+{% endblock %} 

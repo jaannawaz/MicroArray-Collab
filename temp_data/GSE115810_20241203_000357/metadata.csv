@@ -1,0 +1,28 @@
+,sample_id,title,source,characteristics,tissue,grade
+0,GSM3190275,endometrium2_cancer_G1,endometrium cancer G1,tissue: endometrium cancer; grade: G1,endometrium cancer,G1
+1,GSM3190276,endometrium3_cancer_G1,endometrium cancer G1,tissue: endometrium cancer; grade: G1,endometrium cancer,G1
+2,GSM3190277,endometrium4_control,endometrium control,tissue: endometrium; grade: n/a,endometrium cancer,n
+3,GSM3190278,endometrium5_control,endometrium control,tissue: endometrium; grade: n/a,endometrium cancer,n
+4,GSM3190279,endometrium6_control,endometrium control,tissue: endometrium; grade: n/a,endometrium cancer,n
+5,GSM3190280,endometrium7_cancer_G1,endometrium cancer G1,tissue: endometrium cancer; grade: G1,endometrium cancer,G1
+6,GSM3190281,endometrium8_cancer_G3,endometrium cancer G3,tissue: endometrium cancer; grade: G3,endometrium cancer,G3
+7,GSM3190282,endometrium9_cancer_G3,endometrium cancer G3,tissue: endometrium cancer; grade: G3,endometrium cancer,G3
+8,GSM3190283,endometrium12_cancer_G3,endometrium cancer G3,tissue: endometrium cancer; grade: G3,endometrium cancer,G3
+9,GSM3190284,endometrium13_cancer_G3,endometrium cancer G3,tissue: endometrium cancer; grade: G3,endometrium cancer,G3
+10,GSM3190285,endometrium14_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+11,GSM3190286,endometrium15_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+12,GSM3190287,endometrium16_cancer_G1,endometrium cancer G1,tissue: endometrium cancer; grade: G1,endometrium cancer,G1
+13,GSM3190288,endometrium17_cancer_G3,endometrium cancer G3,tissue: endometrium cancer; grade: G3,endometrium cancer,G3
+14,GSM3190289,endometrium18_cancer_G3,endometrium cancer G3,tissue: endometrium cancer; grade: G3,endometrium cancer,G3
+15,GSM3190290,endometrium19_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+16,GSM3190291,endometrium20_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+17,GSM3190292,endometrium21_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+18,GSM3190293,endometrium22_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+19,GSM3190294,endometrium24_cancer_G1,endometrium cancer G1,tissue: endometrium cancer; grade: G1,endometrium cancer,G1
+20,GSM3190295,endometrium25_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+21,GSM3190296,endometrium26_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+22,GSM3190297,endometrium27_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+23,GSM3190298,endometrium28_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+24,GSM3190299,endometrium29_cancer_G2,endometrium cancer G2,tissue: endometrium cancer; grade: G2,endometrium cancer,G2
+25,GSM3190300,endometrium30_cancer_G1,endometrium cancer G1,tissue: endometrium cancer; grade: G1,endometrium cancer,G1
+26,GSM3190301,endometrium31_cancer_G1,endometrium cancer G1,tissue: endometrium cancer; grade: G1,endometrium cancer,G1

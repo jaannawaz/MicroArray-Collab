@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Normalization Analysis{% endblock %}
+
+{% block extra_css %}
+<style>
+    #processLogs {
+        max-height: 200px;
+        overflow-y: auto;
+        font-family: 'Consolas', monospace;
+        font-size: 0.9em;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+    }
+
+    .log-entry {
+        margin: 4px 0;
+        padding: 4px 8px;
+        border-radius: 4px;
+    }
+
+    .log-info { background-color: #e3f2fd; }
+    .log-error { background-color: #ffebee; }
+    .log-success { background-color: #e8f5e9; }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .plot-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .plot-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+    }
+
+    .action-button {
+        min-width: 150px;
+    }
+
+    .progress-indicator {
+        height: 4px;
+        margin-top: 10px;
+        background-color: #e9ecef;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background-color: var(--secondary-color);
+        transition: width 0.3s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="animate__animated animate__fadeIn">
+    <h2 class="mb-4"><i class="fas fa-chart-line"></i> Microarray Data Normalization</h2>
+
+    <!-- Status Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title mb-0">Normalization Status</h5>
+                    <p class="text-muted mb-0" id="statusText">Ready to start normalization</p>
+                </div>
+                <button id="runNormalizationButton" class="btn btn-primary action-button">
+                    <i class="fas fa-play"></i> Start Normalization
+                </button>
+            </div>
+            <div class="progress-indicator">
+                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Logs -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-terminal"></i> Process Logs</h5>
+        </div>
+        <div class="card-body">
+            <div id="processLogs"></div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="normalizationResults" style="display: none">
+        <!-- Platform Information -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-microchip"></i> Platform Information</h5>
+            </div>
+            <div class="card-body">
+                <div id="platformType"></div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Normalization Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h6>Before Normalization</h6>
+                        <div id="beforeStats"></div>
+                    </div>
+                    <div class="stat-card">
+                        <h6>After Normalization</h6>
+                        <div id="afterStats"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plots -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-area"></i> Visualization</h5>
+            </div>
+            <div class="card-body">
+                <div class="plot-container">
+                    <h6>Expression Distribution Before vs After Normalization</h6>
+                    <img id="normalizationPlot" alt="Normalization Plot" class="img-fluid">
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-download"></i> Download Results</h5>
+            </div>
+            <div class="card-body">
+                <a href="/download_normalized_data" class="btn btn-success">
+                    <i class="fas fa-file-csv"></i> Download Normalized Data (CSV)
+                </a>
+            </div>
+        </div>
+
+        <!-- DEG Analysis Link -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-arrow-right"></i> Next Step</h5>
+            </div>
+            <div class="card-body">
+                <p>Proceed to differential expression analysis using the normalized data.</p>
+                <a href="/deg_analysis" class="btn btn-primary">
+                    <i class="fas fa-microscope"></i> Start DEG Analysis
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function updateStatus(status, message) {
+        const statusText = $('#statusText');
+        const progressBar = $('.progress-bar');
+        
+        statusText.text(message);
+        
+        switch(status) {
+            case 'processing':
+                progressBar.css('width', '50%');
+                break;
+            case 'success':
+                progressBar.css('width', '100%');
+                break;
+            case 'error':
+                progressBar.css('width', '0%');
+                break;
+            default:
+                progressBar.css('width', '0%');
+        }
+    }
+
+    function addLogEntry(message, type = 'info') {
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = $('<div>')
+            .addClass(`log-entry log-${type} animate__animated animate__fadeIn`)
+            .text(`[${timestamp}] ${message}`);
+        $('#processLogs').append(logEntry)
+                       .scrollTop($('#processLogs')[0].scrollHeight);
+    }
+
+    $(document).ready(function() {
+        $('#runNormalizationButton').click(function() {
+            // Clear previous results
+            $('#normalizationResults').hide();
+            $('#processLogs').empty();
+            
+            // Update status
+            updateStatus('processing', 'Running normalization...');
+            addLogEntry('Starting normalization process...', 'info');
+
+            // Disable button
+            $(this).prop('disabled', true)
+                  .html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+
+            $.ajax({
+                url: '/run_normalization',
+                method: 'POST',
+                contentType: 'application/json',
+                success: function(response) {
+                    console.log("Normalization response:", response);
+                    
+                    if (response.status === 'success') {
+                        updateStatus('success', 'Normalization completed successfully');
+                        
+                        // Update UI with results
+                        $('#platformType').html(`
+                            <strong>Platform Type:</strong> ${response.platform_type}<br>
+                            <strong>Data Shape:</strong> ${response.data_shape.rows} genes × ${response.data_shape.columns} samples
+                        `);
+
+                        // Update plots and stats
+                        if (response.plots.normalization_comparison) {
+                            $('#normalizationPlot').attr('src', 'data:image/png;base64,' + response.plots.normalization_comparison);
+                        }
+
+                        if (response.stats.normalization) {
+                            const beforeStats = response.stats.normalization.before;
+                            const afterStats = response.stats.normalization.after;
+
+                            $('#beforeStats').html(`
+                                <p><strong>Mean:</strong> ${beforeStats.mean.toFixed(3)}</p>
+                                <p><strong>Standard Deviation:</strong> ${beforeStats.std.toFixed(3)}</p>
+                                <p><strong>Median:</strong> ${beforeStats.median.toFixed(3)}</p>
+                            `);
+
+                            $('#afterStats').html(`
+                                <p><strong>Mean:</strong> ${afterStats.mean.toFixed(3)}</p>
+                                <p><strong>Standard Deviation:</strong> ${afterStats.std.toFixed(3)}</p>
+                                <p><strong>Median:</strong> ${afterStats.median.toFixed(3)}</p>
+                            `);
+                        }
+
+                        // Show results
+                        $('#normalizationResults').fadeIn();
+                        
+                        // Scroll to results
+                        $('html, body').animate({
+                            scrollTop: $("#normalizationResults").offset().top - 20
+                        }, 1000);
+                    }
+
+                    // Reset button
+                    $('#runNormalizationButton').prop('disabled', false)
+                          .html('<i class="fas fa-play"></i> Start Normalization');
+                },
+                error: function(xhr, status, error) {
+                    console.error("Normalization error:", xhr.responseJSON);
+                    updateStatus('error', 'Error occurred during normalization');
+                    addLogEntry('Error: ' + (xhr.responseJSON?.error || error), 'error');
+                    
+                    $('#runNormalizationButton').prop('disabled', false)
+                          .html('<i class="fas fa-play"></i> Start Normalization');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %} 

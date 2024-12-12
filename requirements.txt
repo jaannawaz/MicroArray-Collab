@@ -1,0 +1,12 @@
+Flask
+Flask-Cors
+pandas
+numpy
+scipy
+statsmodels
+seaborn
+matplotlib
+GEOparse
+biomart
+requests
+gunicorn==20.1.0

@@ -1,176 +1,122 @@
 {% extends "base.html" %}
 
-{% block title %}Normalization Analysis{% endblock %}
-
-{% block extra_css %}
-<style>
-    #processLogs {
-        max-height: 200px;
-        overflow-y: auto;
-        font-family: 'Consolas', monospace;
-        font-size: 0.9em;
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-    }
-
-    .log-entry {
-        margin: 4px 0;
-        padding: 4px 8px;
-        border-radius: 4px;
-    }
-
-    .log-info { background-color: #e3f2fd; }
-    .log-error { background-color: #ffebee; }
-    .log-success { background-color: #e8f5e9; }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin: 20px 0;
-    }
-
-    .stat-card {
-        background: white;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .plot-container {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 20px 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .plot-container img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 5px;
-    }
-
-    .action-button {
-        min-width: 150px;
-    }
-
-    .progress-indicator {
-        height: 4px;
-        margin-top: 10px;
-        background-color: #e9ecef;
-        border-radius: 2px;
-        overflow: hidden;
-    }
-
-    .progress-bar {
-        height: 100%;
-        background-color: var(--secondary-color);
-        transition: width 0.3s ease;
-    }
-</style>
-{% endblock %}
+{% block title %}Data Normalization{% endblock %}
 
 {% block content %}
-<div class="animate__animated animate__fadeIn">
-    <h2 class="mb-4"><i class="fas fa-chart-line"></i> Microarray Data Normalization</h2>
-
-    <!-- Status Card -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="card-title mb-0">Normalization Status</h5>
-                    <p class="text-muted mb-0" id="statusText">Ready to start normalization</p>
-                </div>
-                <button id="runNormalizationButton" class="btn btn-primary action-button">
-                    <i class="fas fa-play"></i> Start Normalization
-                </button>
-            </div>
-            <div class="progress-indicator">
-                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Process Logs -->
+<div class="container">
+    <h1>Data Normalization</h1>
+    
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="mb-0"><i class="fas fa-terminal"></i> Process Logs</h5>
+            <h5 class="mb-0">Normalization Settings</h5>
         </div>
         <div class="card-body">
-            <div id="processLogs"></div>
+            <div id="groupInfo" class="alert alert-info">
+                Loading group information...
+            </div>
+            <form id="normalizationForm">
+                <div class="mb-3">
+                    <label class="form-label">Normalization Method</label>
+                    <select class="form-select" id="normalizationMethod">
+                        <option value="quantile">Quantile Normalization</option>
+                        <option value="log2">Log2 Transformation</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-chart-line"></i> Run Normalization
+                </button>
+            </form>
         </div>
     </div>
 
     <!-- Results Section -->
-    <div id="normalizationResults" style="display: none">
-        <!-- Platform Information -->
+    <div id="normalizationResults" style="display: none;">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-microchip"></i> Platform Information</h5>
+                <h5 class="mb-0">Normalization Results</h5>
             </div>
             <div class="card-body">
-                <div id="platformType"></div>
-            </div>
-        </div>
-
-        <!-- Statistics -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Normalization Statistics</h5>
-            </div>
-            <div class="card-body">
-                <div class="stats-grid">
-                    <div class="stat-card">
+                <!-- Statistics -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
                         <h6>Before Normalization</h6>
-                        <div id="beforeStats"></div>
+                        <ul class="list-group" id="beforeStats">
+                            <!-- Stats will be populated here -->
+                        </ul>
                     </div>
-                    <div class="stat-card">
+                    <div class="col-md-6">
                         <h6>After Normalization</h6>
-                        <div id="afterStats"></div>
+                        <ul class="list-group" id="afterStats">
+                            <!-- Stats will be populated here -->
+                        </ul>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Plots -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-area"></i> Visualization</h5>
-            </div>
-            <div class="card-body">
-                <div class="plot-container">
-                    <h6>Expression Distribution Before vs After Normalization</h6>
-                    <img id="normalizationPlot" alt="Normalization Plot" class="img-fluid">
+                <!-- Box Plots -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Expression Distribution Before</h6>
+                            </div>
+                            <div class="card-body">
+                                <img id="beforeBoxPlot" class="img-fluid" alt="Before Normalization">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Expression Distribution After</h6>
+                            </div>
+                            <div class="card-body">
+                                <img id="afterBoxPlot" class="img-fluid" alt="After Normalization">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Density Plots -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Expression Density Before</h6>
+                            </div>
+                            <div class="card-body">
+                                <img id="beforeDensity" class="img-fluid" alt="Density Before">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Expression Density After</h6>
+                            </div>
+                            <div class="card-body">
+                                <img id="afterDensity" class="img-fluid" alt="Density After">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Links -->
+                <div class="text-center mt-4">
+                    <h6>Normalized Data Files</h6>
+                    <a id="group1Link" href="#" class="btn btn-success me-2">
+                        <i class="fas fa-download"></i> Download Group 1 Data
+                    </a>
+                    <a id="group2Link" href="#" class="btn btn-success">
+                        <i class="fas fa-download"></i> Download Group 2 Data
+                    </a>
                 </div>
             </div>
         </div>
-
-        <!-- Download Section -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-download"></i> Download Results</h5>
-            </div>
-            <div class="card-body">
-                <a href="/download_normalized_data" class="btn btn-success">
-                    <i class="fas fa-file-csv"></i> Download Normalized Data (CSV)
-                </a>
-            </div>
-        </div>
-
-        <!-- DEG Analysis Link -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-arrow-right"></i> Next Step</h5>
-            </div>
-            <div class="card-body">
-                <p>Proceed to differential expression analysis using the normalized data.</p>
-                <a href="/deg_analysis" class="btn btn-primary">
-                    <i class="fas fa-microscope"></i> Start DEG Analysis
-                </a>
-            </div>
+        
+        <div class="text-center mb-4">
+            <a href="/deg_analysis" class="btn btn-primary">
+                <i class="fas fa-dna"></i> Proceed to DEG Analysis
+            </a>
         </div>
     </div>
 </div>
@@ -178,111 +124,103 @@
 
 {% block extra_js %}
 <script>
-    function updateStatus(status, message) {
-        const statusText = $('#statusText');
-        const progressBar = $('.progress-bar');
-        
-        statusText.text(message);
-        
-        switch(status) {
-            case 'processing':
-                progressBar.css('width', '50%');
-                break;
-            case 'success':
-                progressBar.css('width', '100%');
-                break;
-            case 'error':
-                progressBar.css('width', '0%');
-                break;
-            default:
-                progressBar.css('width', '0%');
-        }
-    }
-
-    function addLogEntry(message, type = 'info') {
-        const timestamp = new Date().toLocaleTimeString();
-        const logEntry = $('<div>')
-            .addClass(`log-entry log-${type} animate__animated animate__fadeIn`)
-            .text(`[${timestamp}] ${message}`);
-        $('#processLogs').append(logEntry)
-                       .scrollTop($('#processLogs')[0].scrollHeight);
-    }
-
-    $(document).ready(function() {
-        $('#runNormalizationButton').click(function() {
-            // Clear previous results
-            $('#normalizationResults').hide();
-            $('#processLogs').empty();
+$(document).ready(function() {
+    // Load group information
+    $.get('/get_group_info', function(response) {
+        if (response.status === 'success') {
+            const group1Samples = response.groups.group1 || [];
+            const group2Samples = response.groups.group2 || [];
             
-            // Update status
-            updateStatus('processing', 'Running normalization...');
-            addLogEntry('Starting normalization process...', 'info');
+            if (group1Samples.length === 0 && group2Samples.length === 0) {
+                $('#groupInfo')
+                    .removeClass('alert-info')
+                    .addClass('alert-warning')
+                    .html('<i class="fas fa-exclamation-triangle"></i> No samples assigned to groups. Please go back and assign samples to groups first.');
+                $('#normalizationForm button[type="submit"]').prop('disabled', true);
+                return;
+            }
+            
+            const totalSamples = group1Samples.length + group2Samples.length;
+            $('#groupInfo')
+                .html(`
+                    <strong>Selected Samples:</strong><br>
+                    Group 1: ${group1Samples.length} samples<br>
+                    Group 2: ${group2Samples.length} samples<br>
+                    Total: ${totalSamples} samples
+                `);
+        } else {
+            $('#groupInfo')
+                .removeClass('alert-info')
+                .addClass('alert-danger')
+                .text('Error loading group information: ' + response.error);
+            $('#normalizationForm button[type="submit"]').prop('disabled', true);
+        }
+    }).fail(function(xhr, status, error) {
+        $('#groupInfo')
+            .removeClass('alert-info')
+            .addClass('alert-danger')
+            .text('Error loading group information: ' + error);
+        $('#normalizationForm button[type="submit"]').prop('disabled', true);
+    });
 
-            // Disable button
-            $(this).prop('disabled', true)
-                  .html('<i class="fas fa-spinner fa-spin"></i> Processing...');
-
-            $.ajax({
-                url: '/run_normalization',
-                method: 'POST',
-                contentType: 'application/json',
-                success: function(response) {
-                    console.log("Normalization response:", response);
+    $('#normalizationForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        const method = $('#normalizationMethod').val();
+        const submitButton = $(this).find('button[type="submit"]');
+        
+        submitButton.prop('disabled', true)
+            .html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+        
+        $.ajax({
+            url: '/run_normalization',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                method: method
+            }),
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Display statistics
+                    $('#beforeStats').html(`
+                        <li class="list-group-item">Mean: ${response.stats.before.mean.toFixed(4)}</li>
+                        <li class="list-group-item">Std Dev: ${response.stats.before.std.toFixed(4)}</li>
+                        <li class="list-group-item">Min: ${response.stats.before.min.toFixed(4)}</li>
+                        <li class="list-group-item">Max: ${response.stats.before.max.toFixed(4)}</li>
+                    `);
                     
-                    if (response.status === 'success') {
-                        updateStatus('success', 'Normalization completed successfully');
-                        
-                        // Update UI with results
-                        $('#platformType').html(`
-                            <strong>Platform Type:</strong> ${response.platform_type}<br>
-                            <strong>Data Shape:</strong> ${response.data_shape.rows} genes × ${response.data_shape.columns} samples
-                        `);
+                    $('#afterStats').html(`
+                        <li class="list-group-item">Mean: ${response.stats.after.mean.toFixed(4)}</li>
+                        <li class="list-group-item">Std Dev: ${response.stats.after.std.toFixed(4)}</li>
+                        <li class="list-group-item">Min: ${response.stats.after.min.toFixed(4)}</li>
+                        <li class="list-group-item">Max: ${response.stats.after.max.toFixed(4)}</li>
+                    `);
 
-                        // Update plots and stats
-                        if (response.plots.normalization_comparison) {
-                            $('#normalizationPlot').attr('src', 'data:image/png;base64,' + response.plots.normalization_comparison);
-                        }
+                    // Display plots
+                    $('#beforeBoxPlot').attr('src', 'data:image/png;base64,' + response.plots.before_boxplot);
+                    $('#afterBoxPlot').attr('src', 'data:image/png;base64,' + response.plots.after_boxplot);
+                    $('#beforeDensity').attr('src', 'data:image/png;base64,' + response.plots.before_density);
+                    $('#afterDensity').attr('src', 'data:image/png;base64,' + response.plots.after_density);
 
-                        if (response.stats.normalization) {
-                            const beforeStats = response.stats.normalization.before;
-                            const afterStats = response.stats.normalization.after;
+                    // Set download links
+                    $('#group1Link').attr('href', '/temp/' + response.files.group1);
+                    $('#group2Link').attr('href', '/temp/' + response.files.group2);
 
-                            $('#beforeStats').html(`
-                                <p><strong>Mean:</strong> ${beforeStats.mean.toFixed(3)}</p>
-                                <p><strong>Standard Deviation:</strong> ${beforeStats.std.toFixed(3)}</p>
-                                <p><strong>Median:</strong> ${beforeStats.median.toFixed(3)}</p>
-                            `);
-
-                            $('#afterStats').html(`
-                                <p><strong>Mean:</strong> ${afterStats.mean.toFixed(3)}</p>
-                                <p><strong>Standard Deviation:</strong> ${afterStats.std.toFixed(3)}</p>
-                                <p><strong>Median:</strong> ${afterStats.median.toFixed(3)}</p>
-                            `);
-                        }
-
-                        // Show results
-                        $('#normalizationResults').fadeIn();
-                        
-                        // Scroll to results
-                        $('html, body').animate({
-                            scrollTop: $("#normalizationResults").offset().top - 20
-                        }, 1000);
-                    }
-
-                    // Reset button
-                    $('#runNormalizationButton').prop('disabled', false)
-                          .html('<i class="fas fa-play"></i> Start Normalization');
-                },
-                error: function(xhr, status, error) {
-                    console.error("Normalization error:", xhr.responseJSON);
-                    updateStatus('error', 'Error occurred during normalization');
-                    addLogEntry('Error: ' + (xhr.responseJSON?.error || error), 'error');
-                    
-                    $('#runNormalizationButton').prop('disabled', false)
-                          .html('<i class="fas fa-play"></i> Start Normalization');
+                    // Show results section
+                    $('#normalizationResults').fadeIn();
+                } else {
+                    alert('Error: ' + response.error);
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                alert('Error running normalization: ' + error);
+            },
+            complete: function() {
+                submitButton.prop('disabled', false)
+                    .html('<i class="fas fa-chart-line"></i> Run Normalization');
+            }
         });
     });
+});
 </script>
 {% endblock %} 

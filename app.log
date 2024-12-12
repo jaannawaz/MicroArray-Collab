@@ -15093,3 +15093,1041 @@ ValueError: Failed to extract expression data: cannot access local variable 'id_
 2024-12-03 00:20:19,043 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/app.py', reloading
 2024-12-03 00:20:19,646 - werkzeug - INFO -  * Restarting with stat
 2024-12-03 00:22:48,581 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 12:01:25,506 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-10 12:01:25,507 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-10 12:01:25,508 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 12:01:26,897 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 12:01:26,926 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 12:01:32,166 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:01:32] "GET / HTTP/1.1" 200 -
+2024-12-10 12:01:37,758 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 12:01:37,759 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 12:01:37,759 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 12:01:37,759 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 12:01:37,759 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 12:01:37,760 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 12:01:37,761 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 12:01:37,762 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 12:01:39,311 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 12:01:39,392 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 12:01:39,470 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 12:01:39,547 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 12:01:39,625 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 12:01:39,703 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 12:01:39,780 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 12:01:39,858 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 12:01:39,936 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 12:01:40,014 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 12:01:40,092 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 12:01:40,174 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 12:01:40,253 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 12:01:40,336 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 12:01:40,336 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 12:01:40,336 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 12:01:40,375 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:01:40] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 12:01:50,087 - modules.data_loader - INFO - Updated sample groups: 4 samples assigned
+2024-12-10 12:01:50,088 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:01:50] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 12:02:02,449 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 12:02:02,450 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:02:02] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 12:02:04,060 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 12:02:04,072 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 12:02:07,500 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 12:02:07,500 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:02:07] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 12:02:07,519 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:02:07] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 12:02:17,970 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:02:17] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 12:02:17,997 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:02:17] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 12:02:22,250 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 12:02:22,258 - __main__ - INFO - Data shape for normalization: (54675, 8)
+2024-12-10 12:02:22,265 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 8)
+2024-12-10 12:02:22,265 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 12:02:29,358 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 12:02:29,358 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 8)
+2024-12-10 12:02:29,358 - __main__ - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 12:02:29,772 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_120229.csv
+2024-12-10 12:02:29,780 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:02:29] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 12:02:34,746 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 12:02:34,747 - __main__ - INFO - Normalized data exists: True
+2024-12-10 12:02:34,747 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 12:02:34,747 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 12:02:34,748 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 12:02:34,748 - __main__ - INFO - Group 2 samples: 4
+2024-12-10 12:02:34,758 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:02:34] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 12:02:41,245 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 12:02:41,245 - __main__ - INFO - Treatment group: group2 (4 samples)
+2024-12-10 12:02:41,246 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 8)
+2024-12-10 12:02:41,246 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 12:02:41,246 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (4 samples)
+2024-12-10 12:03:51,887 - modules.deg_analyzer - ERROR - Error generating plots: 'seaborn' is not a valid package style, path of style file, URL of style file, or library style name (library styles are listed in `style.available`)
+2024-12-10 12:03:52,430 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:03:52] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 12:07:00,653 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 12:07:00,930 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 12:07:02,676 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 12:07:02,705 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 12:07:34,412 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:07:34] "GET / HTTP/1.1" 200 -
+2024-12-10 12:07:57,986 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 12:07:57,987 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 12:07:57,988 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 12:07:57,988 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 12:07:57,988 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 12:07:57,989 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 12:07:57,990 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 12:07:57,991 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 12:07:59,423 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 12:07:59,506 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 12:07:59,584 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 12:07:59,664 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 12:07:59,741 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 12:07:59,817 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 12:07:59,894 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 12:07:59,971 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 12:08:00,049 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 12:08:00,127 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 12:08:00,203 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 12:08:00,279 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 12:08:00,356 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 12:08:00,438 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 12:08:00,438 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 12:08:00,439 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 12:08:00,472 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:08:00] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 12:08:11,875 - modules.data_loader - INFO - Updated sample groups: 3 samples assigned
+2024-12-10 12:08:11,875 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:08:11] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 12:08:18,417 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 12:08:18,417 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:08:18] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 12:08:20,687 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 12:08:20,696 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 12:08:23,342 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 12:08:23,343 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:08:23] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 12:08:23,363 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:08:23] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 12:08:53,255 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:08:53] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 12:08:53,280 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:08:53] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 12:08:56,146 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 12:08:56,151 - __main__ - INFO - Data shape for normalization: (54675, 6)
+2024-12-10 12:08:56,159 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 6)
+2024-12-10 12:08:56,159 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 12:09:01,566 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 12:09:01,566 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 6)
+2024-12-10 12:09:01,566 - __main__ - INFO - Normalization completed. Output shape: (54675, 6)
+2024-12-10 12:09:01,894 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_120901.csv
+2024-12-10 12:09:01,901 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:09:01] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 12:09:07,617 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 12:09:07,617 - __main__ - INFO - Normalized data exists: True
+2024-12-10 12:09:07,618 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 12:09:07,618 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 12:09:07,618 - __main__ - INFO - Group 1 samples: 3
+2024-12-10 12:09:07,618 - __main__ - INFO - Group 2 samples: 3
+2024-12-10 12:09:07,624 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:09:07] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 12:09:17,098 - __main__ - INFO - Running DEG analysis with control group: group1 (3 samples)
+2024-12-10 12:09:17,099 - __main__ - INFO - Treatment group: group2 (3 samples)
+2024-12-10 12:09:17,099 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 6)
+2024-12-10 12:09:17,099 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 12:09:17,099 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (3 samples) and group2 (3 samples)
+2024-12-10 12:10:29,285 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 12:10:29] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:01:18,934 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 21:01:19,314 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:01:21,160 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:01:21,189 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:01:33,214 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:33] "GET / HTTP/1.1" 200 -
+2024-12-10 21:01:38,625 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:01:38,625 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:01:38,626 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:01:38,626 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:01:38,626 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:01:38,627 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:01:38,628 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:01:38,628 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:01:40,352 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:01:40,437 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:01:40,520 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:01:40,601 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:01:40,680 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:01:40,759 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:01:40,838 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:01:40,917 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:01:40,997 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:01:41,081 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:01:41,161 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:01:41,242 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:01:41,321 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:01:41,407 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:01:41,407 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:01:41,407 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:01:41,446 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:41] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:01:46,143 - modules.data_loader - INFO - Updated sample groups: 3 samples assigned
+2024-12-10 21:01:46,143 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:46] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:01:50,125 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 21:01:50,126 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:50] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:01:51,468 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 21:01:51,478 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:01:54,127 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:01:54,128 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:54] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:01:54,146 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:54] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:01:57,868 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:57] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:01:57,902 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:01:57] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:02:02,696 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:02:02,703 - __main__ - INFO - Data shape for normalization: (54675, 6)
+2024-12-10 21:02:02,709 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 6)
+2024-12-10 21:02:02,710 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:02:08,096 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:02:08,096 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 6)
+2024-12-10 21:02:08,096 - __main__ - INFO - Normalization completed. Output shape: (54675, 6)
+2024-12-10 21:02:08,427 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_210208.csv
+2024-12-10 21:02:08,434 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:02:08] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:02:11,041 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:02:11,042 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:02:11,043 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:02:11,043 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:02:11,043 - __main__ - INFO - Group 1 samples: 3
+2024-12-10 21:02:11,043 - __main__ - INFO - Group 2 samples: 3
+2024-12-10 21:02:11,050 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:02:11] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:02:19,825 - __main__ - INFO - Running DEG analysis with control group: group1 (3 samples)
+2024-12-10 21:02:19,825 - __main__ - INFO - Treatment group: group2 (3 samples)
+2024-12-10 21:02:19,826 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 6)
+2024-12-10 21:02:19,826 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:02:19,826 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (3 samples) and group2 (3 samples)
+2024-12-10 21:03:31,635 - modules.deg_analyzer - ERROR - Error generating plots: loop of ufunc does not support argument 0 of type float which has no callable log10 method
+2024-12-10 21:03:32,344 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:03:32] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:07:05,896 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-10 21:07:05,897 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-12-10 21:07:05,898 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:07:07,289 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:07:07,324 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:09:25,260 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 21:09:25,581 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:09:27,490 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:09:27,521 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:09:32,800 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:09:32] "GET / HTTP/1.1" 200 -
+2024-12-10 21:09:37,436 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:09:37,436 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:09:37,437 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:09:37,437 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:09:37,437 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:09:37,439 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:09:37,439 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:09:37,439 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:09:38,945 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:09:39,025 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:09:39,101 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:09:39,178 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:09:39,258 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:09:39,336 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:09:39,412 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:09:39,490 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:09:39,566 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:09:39,643 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:09:39,727 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:09:39,804 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:09:39,883 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:09:39,966 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:09:39,966 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:09:39,966 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:09:39,999 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:09:39] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:09:46,531 - modules.data_loader - INFO - Updated sample groups: 3 samples assigned
+2024-12-10 21:09:46,532 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:09:46] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:09:52,930 - modules.data_loader - INFO - Updated sample groups: 7 samples assigned
+2024-12-10 21:09:52,930 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:09:52] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:09:56,947 - modules.data_loader - INFO - Updated sample groups: 7 samples assigned
+2024-12-10 21:09:56,956 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:10:00,055 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:10:00,056 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:10:00] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:10:00,081 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:10:00] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:10:04,143 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:10:04] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:10:04,173 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:10:04] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:10:06,129 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:10:06,135 - __main__ - INFO - Data shape for normalization: (54675, 7)
+2024-12-10 21:10:06,141 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 7)
+2024-12-10 21:10:06,141 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:10:12,414 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:10:12,414 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 7)
+2024-12-10 21:10:12,414 - __main__ - INFO - Normalization completed. Output shape: (54675, 7)
+2024-12-10 21:10:12,804 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_211012.csv
+2024-12-10 21:10:12,812 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:10:12] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:10:17,775 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:10:17,776 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:10:17,776 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:10:17,776 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:10:17,776 - __main__ - INFO - Group 1 samples: 3
+2024-12-10 21:10:17,776 - __main__ - INFO - Group 2 samples: 4
+2024-12-10 21:10:17,784 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:10:17] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:10:24,204 - __main__ - INFO - Running DEG analysis with control group: group1 (3 samples)
+2024-12-10 21:10:24,204 - __main__ - INFO - Treatment group: group2 (4 samples)
+2024-12-10 21:10:24,204 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 7)
+2024-12-10 21:10:24,204 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:10:24,204 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (3 samples) and group2 (4 samples)
+2024-12-10 21:11:36,705 - modules.deg_analyzer - ERROR - Error generating plots: Column 'padj' has dtype object, cannot use method 'nsmallest' with this dtype
+2024-12-10 21:11:37,281 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:11:37] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:12:52,613 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:12:52] "GET /download_normalized_data HTTP/1.1" 200 -
+2024-12-10 21:24:26,183 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 21:24:26,498 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:24:28,335 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:24:28,369 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:24:39,557 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:24:39] "GET / HTTP/1.1" 200 -
+2024-12-10 21:24:44,340 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:24:44,341 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:24:44,341 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:24:44,341 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:24:44,342 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:24:44,343 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:24:44,343 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:24:44,344 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:24:45,796 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:24:45,879 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:24:45,958 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:24:46,037 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:24:46,114 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:24:46,192 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:24:46,269 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:24:46,347 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:24:46,425 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:24:46,502 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:24:46,580 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:24:46,657 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:24:46,736 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:24:46,825 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:24:46,825 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:24:46,825 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:24:46,857 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:24:46] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:24:53,667 - modules.data_loader - INFO - Updated sample groups: 4 samples assigned
+2024-12-10 21:24:53,668 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:24:53] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:25:00,049 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 21:25:00,051 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:25:00] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:25:01,884 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 21:25:01,893 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:25:05,360 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:25:05,361 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:25:05] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:25:05,380 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:25:05] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:25:10,310 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:25:10] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:25:10,341 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:25:10] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:25:14,908 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:25:14,917 - __main__ - INFO - Data shape for normalization: (54675, 8)
+2024-12-10 21:25:14,925 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 8)
+2024-12-10 21:25:14,925 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:25:22,057 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:25:22,058 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 8)
+2024-12-10 21:25:22,058 - __main__ - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 21:25:22,474 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_212522.csv
+2024-12-10 21:25:22,483 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:25:22] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:25:36,304 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:25:36,304 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:25:36,305 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068']}
+2024-12-10 21:25:36,305 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:25:36,305 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 21:25:36,305 - __main__ - INFO - Group 2 samples: 4
+2024-12-10 21:25:36,317 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:25:36] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:25:47,877 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 21:25:47,878 - __main__ - INFO - Treatment group: group2 (4 samples)
+2024-12-10 21:25:47,878 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 8)
+2024-12-10 21:25:47,878 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068']}
+2024-12-10 21:25:47,878 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (4 samples)
+2024-12-10 21:27:07,133 - modules.deg_analyzer - ERROR - Error generating plots: "None of [Index([14100, 21207, 11431], dtype='int64')] are in the [index]"
+2024-12-10 21:27:07,742 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:27:07] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:31:20,590 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/app.py', reloading
+2024-12-10 21:31:20,898 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:31:22,795 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:31:22,831 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:32:02,558 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:02] "GET / HTTP/1.1" 200 -
+2024-12-10 21:32:07,774 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:32:07,774 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:32:07,774 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:32:07,775 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:32:07,775 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:32:07,776 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:32:07,776 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:32:07,777 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:32:09,219 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:32:09,300 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:32:09,377 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:32:09,456 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:32:09,536 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:32:09,612 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:32:09,688 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:32:09,765 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:32:09,840 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:32:09,916 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:32:09,992 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:32:10,068 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:32:10,143 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:32:10,223 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:32:10,223 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:32:10,223 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:32:10,256 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:10] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:32:19,523 - modules.data_loader - INFO - Updated sample groups: 4 samples assigned
+2024-12-10 21:32:19,524 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:19] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:32:26,240 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 21:32:26,241 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:26] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:32:27,401 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 21:32:27,411 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:32:30,796 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:32:30,797 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:30] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:32:30,815 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:30] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:32:50,942 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:50] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:32:50,974 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:32:50] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:32:53,456 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:32:53,459 - __main__ - INFO - Data shape for normalization: (54675, 8)
+2024-12-10 21:32:53,466 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 8)
+2024-12-10 21:32:53,466 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:33:00,461 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:33:00,463 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 8)
+2024-12-10 21:33:00,463 - __main__ - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 21:33:00,877 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_213300.csv
+2024-12-10 21:33:00,886 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:33:00] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:33:09,163 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:33:09,164 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:33:09,164 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310013', 'GSM310014', 'GSM310015', 'GSM310016']}
+2024-12-10 21:33:09,164 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:33:09,164 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 21:33:09,165 - __main__ - INFO - Group 2 samples: 4
+2024-12-10 21:33:09,179 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:33:09] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:33:20,031 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 21:33:20,031 - __main__ - INFO - Treatment group: group2 (4 samples)
+2024-12-10 21:33:20,032 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 8)
+2024-12-10 21:33:20,032 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310013', 'GSM310014', 'GSM310015', 'GSM310016']}
+2024-12-10 21:33:20,032 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (4 samples)
+2024-12-10 21:34:35,178 - modules.deg_analyzer - ERROR - Error generating plots: "None of [Index([13571, 13153], dtype='int64')] are in the [index]"
+2024-12-10 21:34:35,764 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:34:35] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:40:54,967 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 21:40:55,294 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:40:57,205 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:40:57,242 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:42:07,791 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:42:07] "GET / HTTP/1.1" 200 -
+2024-12-10 21:42:19,586 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:42:19,587 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:42:19,588 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:42:19,588 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:42:19,588 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:42:19,590 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:42:19,591 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:42:19,592 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:42:21,169 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:42:21,253 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:42:21,335 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:42:21,420 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:42:21,500 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:42:21,579 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:42:21,660 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:42:21,740 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:42:21,820 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:42:21,900 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:42:21,980 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:42:22,059 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:42:22,139 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:42:22,224 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:42:22,224 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:42:22,224 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:42:22,259 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:42:22] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:42:36,438 - modules.data_loader - INFO - Updated sample groups: 3 samples assigned
+2024-12-10 21:42:36,439 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:42:36] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:42:43,211 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 21:42:43,212 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:42:43] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:42:44,342 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 21:42:44,350 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:42:47,115 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:42:47,116 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:42:47] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:42:47,138 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:42:47] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:43:00,456 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:43:00] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:43:00,490 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:43:00] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:43:03,545 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:43:03,550 - __main__ - INFO - Data shape for normalization: (54675, 6)
+2024-12-10 21:43:03,555 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 6)
+2024-12-10 21:43:03,556 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:43:09,020 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:43:09,021 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 6)
+2024-12-10 21:43:09,021 - __main__ - INFO - Normalization completed. Output shape: (54675, 6)
+2024-12-10 21:43:09,357 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_214309.csv
+2024-12-10 21:43:09,365 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:43:09] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:43:12,331 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:43:12,331 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:43:12,331 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:43:12,331 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:43:12,331 - __main__ - INFO - Group 1 samples: 3
+2024-12-10 21:43:12,331 - __main__ - INFO - Group 2 samples: 3
+2024-12-10 21:43:12,348 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:43:12] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:43:20,649 - __main__ - INFO - Running DEG analysis with control group: group1 (3 samples)
+2024-12-10 21:43:20,649 - __main__ - INFO - Treatment group: group2 (3 samples)
+2024-12-10 21:43:20,649 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 6)
+2024-12-10 21:43:20,650 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:43:20,650 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (3 samples) and group2 (3 samples)
+2024-12-10 21:44:39,201 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:44:39] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:47:43,869 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 21:47:44,241 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:47:46,375 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:47:46,411 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:48:40,241 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:48:40] "GET / HTTP/1.1" 200 -
+2024-12-10 21:48:44,648 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:48:44,648 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:48:44,649 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:48:44,649 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:48:44,650 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:48:44,651 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:48:44,651 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:48:44,652 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:48:46,129 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:48:46,209 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:48:46,287 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:48:46,366 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:48:46,442 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:48:46,519 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:48:46,595 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:48:46,674 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:48:46,751 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:48:46,830 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:48:46,909 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:48:46,987 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:48:47,065 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:48:47,147 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:48:47,148 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:48:47,148 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:48:47,179 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:48:47] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:48:54,809 - modules.data_loader - INFO - Updated sample groups: 4 samples assigned
+2024-12-10 21:48:54,810 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:48:54] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:49:00,775 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 21:49:00,776 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:49:00] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:49:01,857 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 21:49:01,868 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:49:05,370 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:49:05,371 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:49:05] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:49:05,392 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:49:05] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:49:09,694 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:49:09] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:49:09,723 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:49:09] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:49:11,371 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:49:11,378 - __main__ - INFO - Data shape for normalization: (54675, 8)
+2024-12-10 21:49:11,385 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 8)
+2024-12-10 21:49:11,385 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:49:18,504 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:49:18,504 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 8)
+2024-12-10 21:49:18,504 - __main__ - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 21:49:18,930 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_214918.csv
+2024-12-10 21:49:18,939 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:49:18] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:49:24,185 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:49:24,186 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:49:24,186 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:49:24,186 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:49:24,186 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 21:49:24,186 - __main__ - INFO - Group 2 samples: 4
+2024-12-10 21:49:24,203 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:49:24] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:49:30,463 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 21:49:30,463 - __main__ - INFO - Treatment group: group2 (4 samples)
+2024-12-10 21:49:30,463 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 8)
+2024-12-10 21:49:30,464 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:49:30,464 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (4 samples)
+2024-12-10 21:50:46,464 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:50:46] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:52:50,552 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 21:52:50,869 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 21:52:52,883 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 21:52:52,918 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 21:52:54,428 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:52:54] "GET / HTTP/1.1" 200 -
+2024-12-10 21:52:59,621 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:52:59,621 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:52:59,622 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:52:59,623 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:52:59,623 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:52:59,625 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:52:59,626 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:52:59,626 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:53:01,149 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:53:01,231 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:53:01,315 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:53:01,396 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:53:01,474 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:53:01,552 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:53:01,629 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:53:01,707 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:53:01,785 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:53:01,863 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:53:01,941 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:53:02,018 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:53:02,095 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:53:02,177 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:53:02,178 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:53:02,178 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:53:02,212 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:02] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:53:08,356 - modules.data_loader - INFO - Updated sample groups: 3 samples assigned
+2024-12-10 21:53:08,357 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:08] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:53:12,208 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 21:53:12,208 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:12] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:53:13,409 - modules.data_loader - INFO - Updated sample groups: 6 samples assigned
+2024-12-10 21:53:13,417 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:53:16,169 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:53:16,170 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:16] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:53:16,193 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:16] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:53:19,513 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:19] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:53:19,544 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:19] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:53:21,111 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:53:21,117 - __main__ - INFO - Data shape for normalization: (54675, 6)
+2024-12-10 21:53:21,123 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 6)
+2024-12-10 21:53:21,123 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:53:26,683 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:53:26,683 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 6)
+2024-12-10 21:53:26,683 - __main__ - INFO - Normalization completed. Output shape: (54675, 6)
+2024-12-10 21:53:27,016 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_215326.csv
+2024-12-10 21:53:27,025 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:27] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:53:29,841 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:53:29,841 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:53:29,841 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:53:29,841 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:53:29,841 - __main__ - INFO - Group 1 samples: 3
+2024-12-10 21:53:29,841 - __main__ - INFO - Group 2 samples: 3
+2024-12-10 21:53:29,860 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:53:29] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:53:35,837 - __main__ - INFO - Running DEG analysis with control group: group1 (3 samples)
+2024-12-10 21:53:35,838 - __main__ - INFO - Treatment group: group2 (3 samples)
+2024-12-10 21:53:35,838 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 6)
+2024-12-10 21:53:35,838 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988'], 'group2': ['GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:53:35,838 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (3 samples) and group2 (3 samples)
+2024-12-10 21:54:24,508 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:54:24] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:54:32,283 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:54:32] "GET /download_deg_results HTTP/1.1" 200 -
+2024-12-10 21:55:15,042 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:55:15] "GET / HTTP/1.1" 200 -
+2024-12-10 21:55:23,457 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 21:55:23,457 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 21:55:23,458 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 21:55:23,459 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 21:55:23,459 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 21:55:23,461 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 21:55:23,462 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 21:55:23,463 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 21:55:24,954 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 21:55:25,033 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 21:55:25,113 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 21:55:25,191 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 21:55:25,268 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 21:55:25,345 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 21:55:25,422 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 21:55:25,500 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 21:55:25,577 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 21:55:25,655 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 21:55:25,731 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 21:55:25,807 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 21:55:25,884 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 21:55:25,966 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 21:55:25,966 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 21:55:25,966 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 21:55:26,000 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:55:26] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 21:55:34,799 - modules.data_loader - INFO - Updated sample groups: 4 samples assigned
+2024-12-10 21:55:34,800 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:55:34] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:55:50,053 - modules.data_loader - INFO - Updated sample groups: 12 samples assigned
+2024-12-10 21:55:50,054 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:55:50] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 21:55:59,311 - modules.data_loader - INFO - Updated sample groups: 12 samples assigned
+2024-12-10 21:55:59,322 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 21:56:04,083 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 21:56:04,084 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:56:04] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 21:56:04,105 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:56:04] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 21:56:09,157 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:56:09] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 21:56:09,184 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:56:09] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 21:56:14,848 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 21:56:14,856 - __main__ - INFO - Data shape for normalization: (54675, 12)
+2024-12-10 21:56:14,865 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 12)
+2024-12-10 21:56:14,865 - modules.normalizer - INFO - Performing quantile normalization
+2024-12-10 21:56:25,305 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 21:56:25,307 - modules.normalizer - INFO - Normalization completed successfully. Output shape: (54675, 12)
+2024-12-10 21:56:25,307 - __main__ - INFO - Normalization completed. Output shape: (54675, 12)
+2024-12-10 21:56:25,982 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_215625.csv
+2024-12-10 21:56:25,995 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:56:25] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 21:56:32,121 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 21:56:32,121 - __main__ - INFO - Normalized data exists: True
+2024-12-10 21:56:32,122 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:56:32,122 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 21:56:32,122 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 21:56:32,122 - __main__ - INFO - Group 2 samples: 8
+2024-12-10 21:56:32,124 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:56:32] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 21:56:39,165 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 21:56:39,166 - __main__ - INFO - Treatment group: group2 (8 samples)
+2024-12-10 21:56:39,170 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 12)
+2024-12-10 21:56:39,171 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 21:56:39,171 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (8 samples)
+2024-12-10 21:57:28,135 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 21:57:28] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:02:33,665 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/app.py', reloading
+2024-12-10 22:02:34,043 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:02:35,958 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 22:02:35,990 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 22:02:56,334 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:02:56] "GET / HTTP/1.1" 200 -
+2024-12-10 22:03:04,324 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 22:03:04,325 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 22:03:04,325 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 22:03:04,325 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 22:03:04,325 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 22:03:04,326 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 22:03:04,327 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 22:03:04,328 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 22:03:05,810 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 22:03:05,891 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 22:03:05,968 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 22:03:06,046 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 22:03:06,125 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 22:03:06,202 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 22:03:06,280 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 22:03:06,358 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 22:03:06,435 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 22:03:06,511 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 22:03:06,598 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 22:03:06,677 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 22:03:06,755 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 22:03:06,839 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 22:03:06,839 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 22:03:06,839 - modules.data_loader - INFO - Data loaded successfully
+2024-12-10 22:03:06,875 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:06] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 22:03:13,967 - modules.data_loader - INFO - Updated sample groups: 4 samples assigned
+2024-12-10 22:03:13,968 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:13] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:03:20,218 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 22:03:20,219 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:20] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:03:22,698 - modules.data_loader - INFO - Updated sample groups: 8 samples assigned
+2024-12-10 22:03:22,708 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 22:03:26,183 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 22:03:26,184 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:26] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 22:03:26,207 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:26] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 22:03:31,658 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:31] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 22:03:31,691 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:31] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 22:03:33,241 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 22:03:33,250 - __main__ - INFO - Data shape for normalization: (54675, 8)
+2024-12-10 22:03:33,258 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 8)
+2024-12-10 22:03:33,258 - modules.normalizer - INFO - Input data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:03:33,258 - modules.normalizer - INFO - Input data index size: 54675
+2024-12-10 22:03:33,266 - modules.normalizer - INFO - Input data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:03:33,266 - modules.normalizer - INFO - Starting quantile normalization
+2024-12-10 22:03:33,392 - modules.normalizer - INFO - Quantile normalization completed. Shape: (54675, 8)
+2024-12-10 22:03:33,392 - modules.normalizer - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 22:03:33,392 - modules.normalizer - INFO - Output data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:03:33,395 - modules.normalizer - INFO - Output data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:03:40,360 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 22:03:40,360 - __main__ - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 22:03:40,780 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_220340.csv
+2024-12-10 22:03:40,789 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:40] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 22:03:43,355 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 22:03:43,356 - __main__ - INFO - Normalized data exists: True
+2024-12-10 22:03:43,357 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:03:43,358 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 22:03:43,358 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 22:03:43,358 - __main__ - INFO - Group 2 samples: 4
+2024-12-10 22:03:43,375 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:03:43] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:03:49,448 - __main__ - INFO - Starting DEG analysis
+2024-12-10 22:03:49,449 - __main__ - INFO - Normalized data shape: (54675, 8)
+2024-12-10 22:03:49,449 - __main__ - INFO - Normalized data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:03:49,449 - __main__ - INFO - Normalized data index size: 54675
+2024-12-10 22:03:49,450 - __main__ - INFO - Control group (group1): ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989']
+2024-12-10 22:03:49,450 - __main__ - INFO - Treatment group (group2): ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:03:49,450 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 22:03:49,450 - __main__ - INFO - Treatment group: group2 (4 samples)
+2024-12-10 22:03:49,450 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 8)
+2024-12-10 22:03:49,450 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:03:49,450 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (4 samples)
+2024-12-10 22:04:37,600 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:04:37] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:04:45,760 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:04:45] "GET /download_deg_results HTTP/1.1" 200 -
+2024-12-10 22:08:38,116 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/data_loader.py', reloading
+2024-12-10 22:08:38,477 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:08:40,290 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 22:08:40,323 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 22:09:12,712 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 22:09:13,000 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:09:14,678 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 22:09:14,710 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 22:10:19,866 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:19] "GET / HTTP/1.1" 200 -
+2024-12-10 22:10:25,333 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 22:10:25,335 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 22:10:25,336 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 22:10:25,336 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 22:10:25,337 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 22:10:25,340 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 22:10:25,341 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 22:10:25,341 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 22:10:26,898 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 22:10:26,981 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 22:10:27,061 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 22:10:27,138 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 22:10:27,217 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 22:10:27,294 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 22:10:27,372 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 22:10:27,450 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 22:10:27,531 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 22:10:27,613 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 22:10:27,698 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 22:10:27,778 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 22:10:27,857 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 22:10:27,942 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 22:10:27,942 - modules.data_loader - INFO - Expression data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:10:27,942 - modules.data_loader - INFO - Expression data index size: 54675
+2024-12-10 22:10:27,947 - modules.data_loader - INFO - Expression data stats - Mean: 4.90, Std: 3.23
+2024-12-10 22:10:27,948 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 22:10:27,948 - modules.data_loader - INFO - Data loaded successfully. Expression data shape: (54675, 13)
+2024-12-10 22:10:27,948 - modules.data_loader - INFO - Sample columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:10:27,981 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:27] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 22:10:34,717 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': []}
+2024-12-10 22:10:34,717 - modules.data_loader - INFO - Total samples assigned: 4
+2024-12-10 22:10:34,719 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:34] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:10:39,571 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:10:39,572 - modules.data_loader - INFO - Total samples assigned: 8
+2024-12-10 22:10:39,572 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:39] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:10:41,067 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:10:41,068 - modules.data_loader - INFO - Total samples assigned: 8
+2024-12-10 22:10:41,077 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 22:10:44,567 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 22:10:44,568 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:44] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 22:10:44,590 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:44] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 22:10:49,518 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:49] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 22:10:49,546 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:49] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 22:10:51,906 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 22:10:51,914 - __main__ - INFO - Data shape for normalization: (54675, 8)
+2024-12-10 22:10:51,922 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 8)
+2024-12-10 22:10:51,922 - modules.normalizer - INFO - Input data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:10:51,922 - modules.normalizer - INFO - Input data index size: 54675
+2024-12-10 22:10:51,931 - modules.normalizer - INFO - Input data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:10:51,932 - modules.normalizer - INFO - Starting quantile normalization
+2024-12-10 22:10:52,060 - modules.normalizer - INFO - Quantile normalization completed. Shape: (54675, 8)
+2024-12-10 22:10:52,061 - modules.normalizer - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 22:10:52,061 - modules.normalizer - INFO - Output data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:10:52,064 - modules.normalizer - INFO - Output data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:10:58,979 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 22:10:58,979 - __main__ - INFO - Normalization completed. Output shape: (54675, 8)
+2024-12-10 22:10:59,394 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_221058.csv
+2024-12-10 22:10:59,403 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:10:59] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 22:11:01,555 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 22:11:01,555 - __main__ - INFO - Normalized data exists: True
+2024-12-10 22:11:01,555 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:11:01,555 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 22:11:01,555 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 22:11:01,555 - __main__ - INFO - Group 2 samples: 4
+2024-12-10 22:11:01,569 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:11:01] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:11:07,470 - __main__ - INFO - Starting DEG analysis
+2024-12-10 22:11:07,471 - __main__ - INFO - Normalized data shape: (54675, 8)
+2024-12-10 22:11:07,471 - __main__ - INFO - Normalized data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:11:07,471 - __main__ - INFO - Normalized data index size: 54675
+2024-12-10 22:11:07,472 - modules.data_loader - INFO - Getting group samples: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:11:07,472 - __main__ - INFO - Control group (group1): ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989']
+2024-12-10 22:11:07,472 - __main__ - INFO - Treatment group (group2): ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:11:07,473 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 22:11:07,473 - __main__ - INFO - Treatment group: group2 (4 samples)
+2024-12-10 22:11:07,474 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 8)
+2024-12-10 22:11:07,475 - modules.deg_analyzer - INFO - Data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:11:07,475 - modules.deg_analyzer - INFO - Sample info: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:11:07,485 - modules.deg_analyzer - INFO - Data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:11:07,485 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:11:07,486 - modules.deg_analyzer - INFO - Group sizes: group1: 4, group2: 4
+2024-12-10 22:11:07,486 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (4 samples)
+2024-12-10 22:11:07,486 - modules.deg_analyzer - INFO - Group 1 samples: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989']
+2024-12-10 22:11:07,486 - modules.deg_analyzer - INFO - Group 2 samples: ['GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:11:58,564 - modules.deg_analyzer - INFO - Generated 0 significant DEGs
+2024-12-10 22:11:58,564 - modules.deg_analyzer - INFO - Results stats - Mean FC: nan, Min p-adj: nan
+2024-12-10 22:11:59,054 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:11:59] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:15:20,666 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/deg_analyzer.py', reloading
+2024-12-10 22:15:20,965 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:15:22,824 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 22:15:22,857 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 22:15:25,843 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 22:15:25,843 - __main__ - INFO - Normalized data exists: False
+2024-12-10 22:15:25,844 - __main__ - INFO - Sample groups: {'group1': [], 'group2': []}
+2024-12-10 22:15:25,844 - __main__ - INFO - Workflow state: {'qc_completed': False, 'normalization_completed': False, 'deg_ready': False}
+2024-12-10 22:15:25,844 - __main__ - WARNING - No normalized data available
+2024-12-10 22:15:25,850 - __main__ - ERROR - Error in DEG analysis page: Could not build url for endpoint 'normalization'. Did you mean 'run_normalization' instead?
+Traceback (most recent call last):
+  File "/Users/jaan/Desktop/Microarray-2/app.py", line 420, in deg_analysis_page
+    return redirect(url_for('normalization'))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jaan/miniconda3/lib/python3.12/site-packages/flask/helpers.py", line 220, in url_for
+    return current_app.url_for(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jaan/miniconda3/lib/python3.12/site-packages/flask/app.py", line 1084, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jaan/miniconda3/lib/python3.12/site-packages/flask/app.py", line 1073, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jaan/miniconda3/lib/python3.12/site-packages/werkzeug/routing/map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'normalization'. Did you mean 'run_normalization' instead?
+
+2024-12-10 22:15:25,852 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:15:25] "[32mGET /deg_analysis HTTP/1.1[0m" 302 -
+2024-12-10 22:15:25,878 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:15:25] "GET / HTTP/1.1" 200 -
+2024-12-10 22:15:45,224 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:15:45] "GET / HTTP/1.1" 200 -
+2024-12-10 22:15:49,250 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 22:15:49,251 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 22:15:49,251 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 22:15:49,251 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 22:15:49,251 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 22:15:49,253 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 22:15:49,253 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 22:15:49,254 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 22:15:50,890 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 22:15:50,972 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 22:15:51,051 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 22:15:51,130 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 22:15:51,209 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 22:15:51,287 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 22:15:51,367 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 22:15:51,446 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 22:15:51,525 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 22:15:51,609 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 22:15:51,690 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 22:15:51,770 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 22:15:51,849 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 22:15:51,937 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 22:15:51,937 - modules.data_loader - INFO - Expression data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:15:51,937 - modules.data_loader - INFO - Expression data index size: 54675
+2024-12-10 22:15:51,942 - modules.data_loader - INFO - Expression data stats - Mean: 4.90, Std: 3.23
+2024-12-10 22:15:51,942 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 22:15:51,942 - modules.data_loader - INFO - Data loaded successfully. Expression data shape: (54675, 13)
+2024-12-10 22:15:51,942 - modules.data_loader - INFO - Sample columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:15:51,971 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:15:51] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 22:16:04,259 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': []}
+2024-12-10 22:16:04,260 - modules.data_loader - INFO - Total samples assigned: 4
+2024-12-10 22:16:04,260 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:04] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:16:13,700 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:16:13,701 - modules.data_loader - INFO - Total samples assigned: 13
+2024-12-10 22:16:13,702 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:13] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:16:15,422 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:16:15,423 - modules.data_loader - INFO - Total samples assigned: 13
+2024-12-10 22:16:15,436 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 22:16:19,365 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:16:19,365 - modules.data_loader - INFO - Total samples assigned: 13
+2024-12-10 22:16:19,368 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 22:16:21,833 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 22:16:21,834 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:21] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 22:16:23,990 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:23] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 22:16:25,212 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 22:16:25,214 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:25] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 22:16:27,977 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:27] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 22:16:28,005 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:28] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 22:16:29,992 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 22:16:30,005 - __main__ - INFO - Data shape for normalization: (54675, 13)
+2024-12-10 22:16:30,013 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 13)
+2024-12-10 22:16:30,013 - modules.normalizer - INFO - Input data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:16:30,013 - modules.normalizer - INFO - Input data index size: 54675
+2024-12-10 22:16:30,022 - modules.normalizer - INFO - Input data stats - Mean: 4.90, Std: 3.23
+2024-12-10 22:16:30,022 - modules.normalizer - INFO - Starting quantile normalization
+2024-12-10 22:16:30,213 - modules.normalizer - INFO - Quantile normalization completed. Shape: (54675, 13)
+2024-12-10 22:16:30,213 - modules.normalizer - INFO - Normalization completed. Output shape: (54675, 13)
+2024-12-10 22:16:30,213 - modules.normalizer - INFO - Output data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:16:30,216 - modules.normalizer - INFO - Output data stats - Mean: 4.90, Std: 3.23
+2024-12-10 22:16:40,858 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 22:16:40,859 - __main__ - INFO - Normalization completed. Output shape: (54675, 13)
+2024-12-10 22:16:41,590 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_221640.csv
+2024-12-10 22:16:41,602 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:41] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 22:16:47,679 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 22:16:47,680 - __main__ - INFO - Normalized data exists: True
+2024-12-10 22:16:47,680 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:16:47,680 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 22:16:47,681 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 22:16:47,681 - __main__ - INFO - Group 2 samples: 9
+2024-12-10 22:16:47,699 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:16:47] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:17:09,827 - __main__ - INFO - Starting DEG analysis
+2024-12-10 22:17:09,829 - __main__ - INFO - Normalized data shape: (54675, 13)
+2024-12-10 22:17:09,829 - __main__ - INFO - Normalized data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:17:09,829 - __main__ - INFO - Normalized data index size: 54675
+2024-12-10 22:17:09,830 - modules.data_loader - INFO - Getting group samples: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:17:09,830 - __main__ - INFO - Control group (group1): ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989']
+2024-12-10 22:17:09,830 - __main__ - INFO - Treatment group (group2): ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:17:09,830 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 22:17:09,830 - __main__ - INFO - Treatment group: group2 (9 samples)
+2024-12-10 22:17:09,831 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 13)
+2024-12-10 22:17:09,831 - modules.deg_analyzer - INFO - Data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:17:09,831 - modules.deg_analyzer - INFO - Sample info: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:17:09,839 - modules.deg_analyzer - INFO - Data stats - Mean: 4.90, Std: 3.23
+2024-12-10 22:17:09,840 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:17:09,840 - modules.deg_analyzer - INFO - Group sizes: group1: 4, group2: 9
+2024-12-10 22:17:09,840 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (9 samples)
+2024-12-10 22:18:21,992 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:18:21] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:26:38,039 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/app.py', reloading
+2024-12-10 22:26:38,298 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:26:39,994 - werkzeug - WARNING -  * Debugger is active!
+2024-12-10 22:26:40,028 - werkzeug - INFO -  * Debugger PIN: 101-196-138
+2024-12-10 22:26:52,052 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:26:52] "GET / HTTP/1.1" 200 -
+2024-12-10 22:26:56,133 - __main__ - INFO - Fetching GEO dataset: GSE12345
+2024-12-10 22:26:56,134 - modules.data_loader - INFO - Loading GEO dataset: GSE12345
+2024-12-10 22:26:56,134 - GEOparse - DEBUG - Directory ./ already exists. Skipping.
+2024-12-10 22:26:56,134 - GEOparse - INFO - File already exist: using local version.
+2024-12-10 22:26:56,135 - GEOparse - INFO - Parsing ./GSE12345_family.soft.gz: 
+2024-12-10 22:26:56,137 - GEOparse - DEBUG - DATABASE: GeoMiame
+2024-12-10 22:26:56,138 - GEOparse - DEBUG - SERIES: GSE12345
+2024-12-10 22:26:56,138 - GEOparse - DEBUG - PLATFORM: GPL570
+2024-12-10 22:26:57,620 - GEOparse - DEBUG - SAMPLE: GSM309986
+2024-12-10 22:26:57,700 - GEOparse - DEBUG - SAMPLE: GSM309987
+2024-12-10 22:26:57,777 - GEOparse - DEBUG - SAMPLE: GSM309988
+2024-12-10 22:26:57,854 - GEOparse - DEBUG - SAMPLE: GSM309989
+2024-12-10 22:26:57,930 - GEOparse - DEBUG - SAMPLE: GSM309990
+2024-12-10 22:26:58,006 - GEOparse - DEBUG - SAMPLE: GSM309991
+2024-12-10 22:26:58,082 - GEOparse - DEBUG - SAMPLE: GSM310012
+2024-12-10 22:26:58,159 - GEOparse - DEBUG - SAMPLE: GSM310013
+2024-12-10 22:26:58,236 - GEOparse - DEBUG - SAMPLE: GSM310014
+2024-12-10 22:26:58,313 - GEOparse - DEBUG - SAMPLE: GSM310015
+2024-12-10 22:26:58,391 - GEOparse - DEBUG - SAMPLE: GSM310016
+2024-12-10 22:26:58,467 - GEOparse - DEBUG - SAMPLE: GSM310068
+2024-12-10 22:26:58,543 - GEOparse - DEBUG - SAMPLE: GSM310070
+2024-12-10 22:26:58,624 - modules.data_loader - INFO - Extracted expression data with shape: (54675, 13)
+2024-12-10 22:26:58,624 - modules.data_loader - INFO - Expression data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:26:58,624 - modules.data_loader - INFO - Expression data index size: 54675
+2024-12-10 22:26:58,629 - modules.data_loader - INFO - Expression data stats - Mean: 4.90, Std: 3.23
+2024-12-10 22:26:58,629 - modules.data_loader - INFO - Metadata extracted successfully
+2024-12-10 22:26:58,629 - modules.data_loader - INFO - Data loaded successfully. Expression data shape: (54675, 13)
+2024-12-10 22:26:58,629 - modules.data_loader - INFO - Sample columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:26:58,660 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:26:58] "POST /fetch_geo_data HTTP/1.1" 200 -
+2024-12-10 22:27:13,406 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': []}
+2024-12-10 22:27:13,406 - modules.data_loader - INFO - Total samples assigned: 4
+2024-12-10 22:27:13,407 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:13] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:27:19,639 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:27:19,639 - modules.data_loader - INFO - Total samples assigned: 9
+2024-12-10 22:27:19,640 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:19] "POST /save_groups HTTP/1.1" 200 -
+2024-12-10 22:27:21,386 - modules.data_loader - INFO - Updated sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:27:21,387 - modules.data_loader - INFO - Total samples assigned: 9
+2024-12-10 22:27:21,397 - modules.qc_analyzer - INFO - Running QC analysis on 54675 samples
+2024-12-10 22:27:25,122 - modules.qc_analyzer - INFO - QC metrics and plots generated successfully
+2024-12-10 22:27:25,123 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:25] "POST /run_selected_qc HTTP/1.1" 200 -
+2024-12-10 22:27:25,142 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:25] "GET /qc_results HTTP/1.1" 200 -
+2024-12-10 22:27:28,083 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:28] "GET /normalization HTTP/1.1" 200 -
+2024-12-10 22:27:28,106 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:28] "GET /get_group_info HTTP/1.1" 200 -
+2024-12-10 22:27:29,559 - __main__ - INFO - Starting normalization with method: quantile
+2024-12-10 22:27:29,570 - modules.data_loader - INFO - Data Structure:
+2024-12-10 22:27:29,571 - modules.data_loader - INFO - Total shape: (54675, 13)
+2024-12-10 22:27:29,571 - modules.data_loader - INFO - Number of probes: 54675
+2024-12-10 22:27:29,571 - modules.data_loader - INFO - Number of samples: 13
+2024-12-10 22:27:29,571 - modules.data_loader - INFO - Groups:
+2024-12-10 22:27:29,571 - modules.data_loader - INFO -   group1: 4 samples
+2024-12-10 22:27:29,571 - modules.data_loader - INFO -   Sample IDs: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989']
+2024-12-10 22:27:29,571 - modules.data_loader - INFO -   group2: 5 samples
+2024-12-10 22:27:29,571 - modules.data_loader - INFO -   Sample IDs: ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:27:29,572 - __main__ - INFO - Data structure before normalization:
+2024-12-10 22:27:29,572 - __main__ - INFO - {'shape': (54675, 13), 'columns': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM309990', 'GSM309991', 'GSM310012', 'GSM310013', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070'], 'index_sample': ['1007_s_at', '1053_at', '117_at', '121_at', '1255_g_at'], 'sample_data': {'group1': {'samples': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'data_preview': {'GSM309986': {'1007_s_at': 9.22436614, '1053_at': 7.343049587, '117_at': 5.241737116, '121_at': 6.499194247, '1255_g_at': 2.187841072}, 'GSM309987': {'1007_s_at': 9.452484096, '1053_at': 7.245155125, '117_at': 6.609800399, '121_at': 6.458844449, '1255_g_at': 2.187841072}, 'GSM309988': {'1007_s_at': 6.088917442, '1053_at': 7.945808314, '117_at': 8.018336429, '121_at': 7.300338162, '1255_g_at': 2.376541852}, 'GSM309989': {'1007_s_at': 8.779083536, '1053_at': 7.300137175, '117_at': 9.034879505, '121_at': 6.82218761, '1255_g_at': 2.187841072}}}, 'group2': {'samples': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070'], 'data_preview': {'GSM310014': {'1007_s_at': 10.22254162, '1053_at': 7.720182988, '117_at': 5.949720826, '121_at': 6.499194247, '1255_g_at': 2.187841072}, 'GSM310015': {'1007_s_at': 10.27263882, '1053_at': 7.927502904, '117_at': 8.575901571, '121_at': 6.304324176, '1255_g_at': 2.187841072}, 'GSM310016': {'1007_s_at': 10.57538387, '1053_at': 7.681277385, '117_at': 8.1036843, '121_at': 6.485722007, '1255_g_at': 2.187841072}, 'GSM310068': {'1007_s_at': 7.252846285, '1053_at': 6.886230251, '117_at': 5.034102326, '121_at': 6.860827693, '1255_g_at': 2.187841072}, 'GSM310070': {'1007_s_at': 7.226233122, '1053_at': 7.548891154, '117_at': 8.425864386, '121_at': 6.601822463, '1255_g_at': 2.187841072}}}}}
+2024-12-10 22:27:29,582 - modules.data_loader - INFO - Data structure verification passed
+2024-12-10 22:27:29,585 - __main__ - INFO - Data shape for normalization: (54675, 9)
+2024-12-10 22:27:29,589 - modules.normalizer - INFO - Starting quantile normalization on data of shape (54675, 9)
+2024-12-10 22:27:29,589 - modules.normalizer - INFO - Input data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:27:29,589 - modules.normalizer - INFO - Input data index size: 54675
+2024-12-10 22:27:29,595 - modules.normalizer - INFO - Input data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:27:29,595 - modules.normalizer - INFO - Starting quantile normalization
+2024-12-10 22:27:29,728 - modules.normalizer - INFO - Quantile normalization completed. Shape: (54675, 9)
+2024-12-10 22:27:29,728 - modules.normalizer - INFO - Normalization completed. Output shape: (54675, 9)
+2024-12-10 22:27:29,728 - modules.normalizer - INFO - Output data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:27:29,730 - modules.normalizer - INFO - Output data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:27:37,248 - modules.normalizer - INFO - Generated all comparison plots successfully
+2024-12-10 22:27:37,249 - __main__ - INFO - Normalization completed. Output shape: (54675, 9)
+2024-12-10 22:27:37,446 - modules.data_loader - INFO - Saved group1 data to temp/group1_data.csv
+2024-12-10 22:27:37,685 - modules.data_loader - INFO - Saved group2 data to temp/group2_data.csv
+2024-12-10 22:27:38,156 - __main__ - INFO - Normalized data saved to temp/normalized_data_20241210_222737.csv
+2024-12-10 22:27:38,165 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:38] "POST /run_normalization HTTP/1.1" 200 -
+2024-12-10 22:27:43,087 - __main__ - INFO - Accessing DEG analysis page
+2024-12-10 22:27:43,087 - __main__ - INFO - Normalized data exists: True
+2024-12-10 22:27:43,088 - __main__ - INFO - Sample groups: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:27:43,088 - __main__ - INFO - Workflow state: {'qc_completed': True, 'normalization_completed': True, 'deg_ready': False}
+2024-12-10 22:27:43,088 - __main__ - INFO - Group 1 samples: 4
+2024-12-10 22:27:43,088 - __main__ - INFO - Group 2 samples: 5
+2024-12-10 22:27:43,104 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:27:43] "GET /deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:27:49,936 - __main__ - INFO - Starting DEG analysis
+2024-12-10 22:27:49,936 - __main__ - INFO - Normalized data shape: (54675, 9)
+2024-12-10 22:27:49,936 - __main__ - INFO - Normalized data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:27:49,936 - __main__ - INFO - Normalized data index size: 54675
+2024-12-10 22:27:49,937 - modules.data_loader - INFO - Getting group samples: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:27:49,937 - __main__ - INFO - Control group (group1): ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989']
+2024-12-10 22:27:49,937 - __main__ - INFO - Treatment group (group2): ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:27:49,937 - __main__ - INFO - Running DEG analysis with control group: group1 (4 samples)
+2024-12-10 22:27:49,937 - __main__ - INFO - Treatment group: group2 (5 samples)
+2024-12-10 22:27:49,939 - modules.deg_analyzer - INFO - Loaded data with shape: (54675, 9)
+2024-12-10 22:27:49,939 - modules.deg_analyzer - INFO - Data columns: ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989', 'GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']
+2024-12-10 22:27:49,940 - modules.deg_analyzer - INFO - Sample info: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:27:49,950 - modules.deg_analyzer - INFO - Data stats - Mean: 4.90, Std: 3.24
+2024-12-10 22:27:49,951 - modules.deg_analyzer - INFO - Updated group annotations: {'group1': ['GSM309986', 'GSM309987', 'GSM309988', 'GSM309989'], 'group2': ['GSM310014', 'GSM310015', 'GSM310016', 'GSM310068', 'GSM310070']}
+2024-12-10 22:27:49,951 - modules.deg_analyzer - INFO - Group sizes: group1: 4, group2: 5
+2024-12-10 22:27:49,951 - modules.deg_analyzer - INFO - Running DEG analysis between group1 (4 samples) and group2 (5 samples)
+2024-12-10 22:29:01,537 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:29:01] "POST /run_deg_analysis HTTP/1.1" 200 -
+2024-12-10 22:29:20,184 - werkzeug - INFO - 127.0.0.1 - - [10/Dec/2024 22:29:20] "GET /download_normalized_data HTTP/1.1" 200 -
+2024-12-10 22:42:12,206 - werkzeug - INFO -  * Detected change in '/Users/jaan/Desktop/Microarray-2/modules/data_loader.py', reloading
+2024-12-10 22:42:12,535 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:46:25,294 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:49:55,758 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 22:58:55,015 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 23:01:49,626 - werkzeug - INFO -  * Restarting with stat
+2024-12-10 23:05:39,202 - werkzeug - INFO -  * Restarting with stat

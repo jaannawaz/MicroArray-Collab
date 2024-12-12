@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
@@ -12,31 +12,49 @@ logger = logging.getLogger(__name__)
 class ExpressionNormalizer:
     def __init__(self):
         self.normalized_data = None
-        self.normalization_stats = {}
-        self.normalization_plots = {}
+        self.plots = {}
+        self.supported_methods = ['quantile', 'zscore', 'log2']
 
-    def normalize_data(self, expression_data, method='quantile'):
+    def normalize(self, data, method='quantile'):
         """Normalize expression data using specified method"""
         try:
-            logger.info(f"Normalizing data using {method} method...")
+            # Input validation
+            if not isinstance(data, pd.DataFrame):
+                raise ValueError("Input data must be a pandas DataFrame")
             
+            if data.empty:
+                raise ValueError("Input data is empty")
+            
+            if method not in self.supported_methods:
+                raise ValueError(f"Unsupported normalization method: {method}. Supported methods: {', '.join(self.supported_methods)}")
+            
+            # Check for non-numeric values
+            if not data.apply(lambda x: pd.to_numeric(x, errors='coerce')).notna().all().all():
+                raise ValueError("Data contains non-numeric values")
+
+            logger.info(f"Starting {method} normalization on data of shape {data.shape}")
+            logger.info(f"Input data columns: {data.columns.tolist()}")
+            logger.info(f"Input data index size: {len(data.index)}")
+            logger.info(f"Input data stats - Mean: {data.mean().mean():.2f}, Std: {data.std().mean():.2f}")
+            
+            # Perform normalization based on method
             if method == 'quantile':
-                self.normalized_data = self._quantile_normalization(expression_data)
-            elif method == 'log2':
-                self.normalized_data = self._log2_normalization(expression_data)
+                normalized = self._quantile_normalization(data)
             elif method == 'zscore':
-                self.normalized_data = self._zscore_normalization(expression_data)
-            else:
-                raise ValueError(f"Unsupported normalization method: {method}")
+                normalized = self._zscore_normalization(data)
+            elif method == 'log2':
+                normalized = self._log2_transform(data)
             
-            # Calculate normalization statistics
-            self._calculate_normalization_stats(expression_data)
+            self.normalized_data = normalized
             
-            # Generate normalization plots
-            self._generate_normalization_plots(expression_data)
+            logger.info(f"Normalization completed. Output shape: {normalized.shape}")
+            logger.info(f"Output data columns: {normalized.columns.tolist()}")
+            logger.info(f"Output data stats - Mean: {normalized.mean().mean():.2f}, Std: {normalized.std().mean():.2f}")
             
-            logger.info("Normalization completed successfully")
-            return True
+            # Generate plots
+            self.generate_plots(data, normalized)
+            
+            return normalized
             
         except Exception as e:
             logger.error(f"Error in normalization: {str(e)}")
@@ -45,102 +63,135 @@ class ExpressionNormalizer:
     def _quantile_normalization(self, data):
         """Perform quantile normalization"""
         try:
-            # Rank the values in each column
-            rank_mean = data.stack().groupby(data.rank(method='first').stack().astype(int)).mean()
-            return data.rank(method='min').stack().astype(int).map(rank_mean).unstack()
+            logger.info("Starting quantile normalization")
+            
+            # Convert to numpy array for faster computation
+            data_array = data.values
+            
+            # Calculate ranks for each column
+            rank_mean = np.zeros_like(data_array)
+            for i in range(data_array.shape[1]):
+                rank_mean[:, i] = stats.rankdata(data_array[:, i], method='average')
+            
+            # Calculate means of ranks across rows
+            sorted_data = np.sort(data_array, axis=0)
+            mean_sorted = np.mean(sorted_data, axis=1)
+            
+            # Create normalized data
+            normalized_data = np.zeros_like(data_array)
+            for i in range(data_array.shape[1]):
+                normalized_data[:, i] = np.interp(
+                    rank_mean[:, i],
+                    np.arange(1, len(mean_sorted) + 1),
+                    mean_sorted
+                )
+            
+            result = pd.DataFrame(normalized_data, index=data.index, columns=data.columns)
+            logger.info(f"Quantile normalization completed. Shape: {result.shape}")
+            return result
             
         except Exception as e:
             logger.error(f"Error in quantile normalization: {str(e)}")
             raise
 
-    def _log2_normalization(self, data):
-        """Perform log2 normalization"""
-        try:
-            # Add small constant to avoid log(0)
-            return np.log2(data + 1)
-            
-        except Exception as e:
-            logger.error(f"Error in log2 normalization: {str(e)}")
-            raise
-
     def _zscore_normalization(self, data):
         """Perform Z-score normalization"""
         try:
-            return pd.DataFrame(
-                stats.zscore(data, axis=0),
-                index=data.index,
-                columns=data.columns
-            )
-            
+            logger.info("Performing Z-score normalization")
+            return (data - data.mean()) / data.std()
         except Exception as e:
             logger.error(f"Error in Z-score normalization: {str(e)}")
             raise
 
-    def _calculate_normalization_stats(self, original_data):
-        """Calculate normalization statistics"""
+    def _log2_transform(self, data):
+        """Perform log2 transformation"""
         try:
-            self.normalization_stats = {
-                'original': {
-                    'mean': float(original_data.mean().mean()),
-                    'std': float(original_data.std().mean()),
-                    'median': float(original_data.median().mean())
-                },
-                'normalized': {
-                    'mean': float(self.normalized_data.mean().mean()),
-                    'std': float(self.normalized_data.std().mean()),
-                    'median': float(self.normalized_data.median().mean())
-                }
-            }
+            logger.info("Performing log2 transformation")
+            # Check for negative values
+            if (data < 0).any().any():
+                raise ValueError("Cannot perform log2 transformation on negative values")
             
+            # Add small constant to avoid log(0)
+            min_nonzero = data[data > 0].min().min()
+            offset = min_nonzero / 10 if min_nonzero > 0 else 1
+            return np.log2(data + offset)
         except Exception as e:
-            logger.error(f"Error calculating normalization stats: {str(e)}")
+            logger.error(f"Error in log2 transformation: {str(e)}")
             raise
 
-    def _generate_normalization_plots(self, original_data):
-        """Generate normalization comparison plots"""
+    def generate_plots(self, original_data, normalized_data):
+        """Generate comparison plots before and after normalization"""
         try:
-            # Distribution plot
+            plots = {}
+
+            # 1. Box plot (standalone)
             plt.figure(figsize=(12, 6))
             plt.subplot(1, 2, 1)
             sns.boxplot(data=original_data)
-            plt.title('Original Data Distribution')
-            plt.xticks(rotation=90)
+            plt.title('Expression Distribution - Before')
+            plt.xticks(rotation=45, ha='right')
+            plt.ylabel('Expression Level')
             
             plt.subplot(1, 2, 2)
-            sns.boxplot(data=self.normalized_data)
-            plt.title('Normalized Data Distribution')
-            plt.xticks(rotation=90)
+            sns.boxplot(data=normalized_data)
+            plt.title('Expression Distribution - After')
+            plt.xticks(rotation=45, ha='right')
+            plt.ylabel('Expression Level')
             
             plt.tight_layout()
-            self.normalization_plots['distribution'] = self._get_plot_base64()
-            plt.close()
+            plots['boxplot'] = self._convert_plot_to_base64()
 
-            # Correlation heatmap
-            plt.figure(figsize=(12, 5))
+            # 2. Density plots comparison
+            plt.figure(figsize=(12, 6))
             plt.subplot(1, 2, 1)
-            sns.heatmap(original_data.corr(), cmap='coolwarm', center=0)
-            plt.title('Original Data Correlation')
+            for col in original_data.columns:
+                sns.kdeplot(data=original_data[col], label=col)
+            plt.title('Density Distribution - Before')
+            plt.xlabel('Expression Level')
+            plt.ylabel('Density')
             
             plt.subplot(1, 2, 2)
-            sns.heatmap(self.normalized_data.corr(), cmap='coolwarm', center=0)
-            plt.title('Normalized Data Correlation')
+            for col in normalized_data.columns:
+                sns.kdeplot(data=normalized_data[col], label=col)
+            plt.title('Density Distribution - After')
+            plt.xlabel('Expression Level')
+            plt.ylabel('Density')
             
             plt.tight_layout()
-            self.normalization_plots['correlation'] = self._get_plot_base64()
-            plt.close()
+            plots['density_comparison'] = self._convert_plot_to_base64()
+
+            # 3. QQ plots
+            plt.figure(figsize=(12, 6))
+            plt.subplot(1, 2, 1)
+            stats.probplot(original_data.values.flatten(), dist="norm", plot=plt)
+            plt.title('Q-Q Plot - Before')
             
+            plt.subplot(1, 2, 2)
+            stats.probplot(normalized_data.values.flatten(), dist="norm", plot=plt)
+            plt.title('Q-Q Plot - After')
+            
+            plt.tight_layout()
+            plots['qq_comparison'] = self._convert_plot_to_base64()
+
+            # Store plots
+            self.plots = plots
+            logger.info("Generated all comparison plots successfully")
+            return plots
+
         except Exception as e:
             logger.error(f"Error generating normalization plots: {str(e)}")
             raise
 
-    def _get_plot_base64(self):
-        """Convert current plot to base64 string"""
-        buf = BytesIO()
-        plt.savefig(buf, format='png', bbox_inches='tight', dpi=100)
-        plt.close()
-        buf.seek(0)
-        return base64.b64encode(buf.read()).decode('utf-8')
-
-    def get_serializable_stats(self):
-        """Get JSON-serializable normalization statistics"""
-        return self.normalization_stats 
+    def _convert_plot_to_base64(self):
+        """Convert matplotlib plot to base64 string"""
+        try:
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png', bbox_inches='tight')
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
+            plt.close()
+            return base64.b64encode(image_png).decode('utf-8')
+        except Exception as e:
+            logger.error(f"Error converting plot to base64: {str(e)}")
+            raise

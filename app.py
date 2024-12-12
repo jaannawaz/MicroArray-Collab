@@ -1,586 +1,678 @@
-from flask import Flask, render_template, jsonify, request, send_file, url_for, redirect, flash
-import logging
-import matplotlib
-matplotlib.use('Agg')  # Set backend before importing pyplot
-import traceback
+from flask import Flask, request, jsonify, render_template, redirect, session, send_from_directory
 import os
-from datetime import datetime
-import re
-
-# Import our modules
+import json
 from modules.data_loader import GEODataLoader
-from modules.qc_analyzer import QCAnalyzer
-from modules.normalizer import ExpressionNormalizer
-from modules.utils import setup_logging, create_temp_directory
-from modules.microarray_processor import MicroarrayProcessor
-from modules.deg_analyzer import DEGAnalyzer
-
-# Setup logging and create temp directory
-setup_logging()
-logger = logging.getLogger(__name__)
-create_temp_directory()
+from modules.utils import save_to_csv
+import logging
+import pandas as pd
+import numpy as np
+from scipy import stats
+from statsmodels.stats.multitest import multipletests
+import seaborn as sns
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+from io import StringIO
+import warnings
+from GEOparse import get_GEO
+from biomart import BiomartServer
 
 app = Flask(__name__)
+# Set a secret key for session management
+app.secret_key = os.urandom(24)
 
-# Generate a random secret key if not set in environment
-if not os.environ.get('FLASK_SECRET_KEY'):
-    os.environ['FLASK_SECRET_KEY'] = os.urandom(24).hex()
-
-app.secret_key = os.environ.get('FLASK_SECRET_KEY')
-
-# Initialize our components
 data_loader = GEODataLoader()
-qc_analyzer = QCAnalyzer()
-normalizer = ExpressionNormalizer()
-microarray_processor = MicroarrayProcessor()
-deg_analyzer = DEGAnalyzer()
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Ensure temp directory exists
+os.makedirs('temp', exist_ok=True)
+
+def get_quality_class(score):
+    """Helper function for QC quality scores"""
+    if score >= 0.8:
+        return 'bg-success'
+    if score >= 0.6:
+        return 'bg-warning'
+    return 'bg-danger'
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/load_geo', methods=['POST'])
-def load_geo():
+@app.route('/fetch_geo_data', methods=['POST'])
+def fetch_geo_data():
     try:
         data = request.get_json()
         if not data or 'geo_id' not in data:
             return jsonify({'error': 'No GEO ID provided'}), 400
-        
+
         geo_id = data['geo_id'].strip()
-        data_loader.load_from_geo(geo_id)
-        
-        return jsonify({
-            'message': f'Successfully loaded dataset: {geo_id}',
-            'samples': len(data_loader.expression_data.columns),
-            'features': len(data_loader.expression_data.index)
-        })
-        
-    except Exception as e:
-        logger.error(f"Error loading data: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/qc')
-def qc_page():
-    try:
-        if not data_loader.is_data_loaded:
-            flash('Please load data first.', 'warning')
-            return redirect(url_for('index'))
-            
-        # Run QC analysis automatically
-        success = qc_analyzer.run_qc_analysis(data_loader.expression_data)
+        success = data_loader.load_from_geo(geo_id)
         
         if not success:
-            flash('QC analysis failed.', 'error')
-            return redirect(url_for('index'))
-            
-        # Redirect directly to results
-        return render_template('qc_results.html',
-                             metrics=qc_analyzer.qc_metrics,
-                             plots=qc_analyzer.qc_plots,
-                             report=qc_analyzer.qc_report)
-                             
-    except Exception as e:
-        logger.error(f"Error in QC page: {str(e)}")
-        flash('Error running QC analysis.', 'error')
-        return redirect(url_for('index'))
+            return jsonify({'error': 'Failed to load data'}), 400
 
-@app.route('/run_qc', methods=['POST'])
-def run_qc():
-    try:
-        if not data_loader.is_data_loaded:
-            logger.error("No data loaded")
-            return jsonify({'error': 'No data loaded'}), 400
-            
-        # Run QC analysis
-        logger.info("Starting QC analysis...")
-        success = qc_analyzer.run_qc_analysis(data_loader.expression_data)
-        
-        if not success:
-            logger.error("QC analysis failed")
-            return jsonify({'error': 'QC analysis failed'}), 500
-            
-        # Get serializable metrics and plots
-        try:
-            metrics = qc_analyzer.get_serializable_metrics()
-            logger.info("Got serializable metrics")
-        except Exception as e:
-            logger.error(f"Error getting serializable metrics: {str(e)}")
-            return jsonify({'error': 'Error processing metrics'}), 500
-            
-        try:
-            plots = qc_analyzer.qc_plots
-            logger.info(f"Available plots: {list(plots.keys())}")
-        except Exception as e:
-            logger.error(f"Error getting plots: {str(e)}")
-            return jsonify({'error': 'Error processing plots'}), 500
-            
-        try:
-            report = qc_analyzer.qc_report
-            logger.info("Got QC report")
-        except Exception as e:
-            logger.error(f"Error getting report: {str(e)}")
-            return jsonify({'error': 'Error processing report'}), 500
-
-        # Verify data structure
-        if not isinstance(metrics, dict):
-            logger.error(f"Invalid metrics type: {type(metrics)}")
-            return jsonify({'error': 'Invalid metrics format'}), 500
-            
-        if not isinstance(plots, dict):
-            logger.error(f"Invalid plots type: {type(plots)}")
-            return jsonify({'error': 'Invalid plots format'}), 500
-
-        # Check for required plots
-        required_plots = ['expression_dist', 'total_counts_dist', 'pca']
-        missing_plots = [plot for plot in required_plots if plot not in plots]
-        if missing_plots:
-            logger.error(f"Missing required plots: {missing_plots}")
-            return jsonify({'error': f'Missing required plots: {missing_plots}'}), 500
-
-        # Prepare response
-        response_data = {
-            'metrics': metrics,
-            'plots': plots,
-            'report': report
-        }
-
-        # Verify response can be serialized
-        try:
-            jsonify(response_data)
-            logger.info("Response data successfully serialized")
-        except Exception as e:
-            logger.error(f"Error serializing response: {str(e)}")
-            return jsonify({'error': 'Error preparing response'}), 500
-
-        return jsonify(response_data)
-        
-    except Exception as e:
-        logger.error(f"Error running QC: {str(e)}\n{traceback.format_exc()}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/qc_results')
-def qc_results():
-    try:
-        if not data_loader.is_data_loaded:
-            return redirect(url_for('index'))
-        if not qc_analyzer.qc_metrics:
-            return redirect(url_for('qc_page'))
-        return render_template('qc_results.html', 
-                             metrics=qc_analyzer.qc_metrics, 
-                             plots=qc_analyzer.qc_plots,
-                             report=qc_analyzer.qc_report)
-    except Exception as e:
-        logger.error(f"Error loading QC results: {str(e)}")
-        flash('Error loading QC results.', 'error')
-        return redirect(url_for('index'))
-
-@app.route('/normalization')
-def normalization_page():
-    if not data_loader.is_data_loaded:
-        return redirect(url_for('index'))
-    return render_template('normalization.html')
-
-@app.route('/run_normalization', methods=['POST'])
-def run_normalization():
-    try:
-        if not data_loader.is_data_loaded:
-            logger.error("No data loaded for normalization")
-            return jsonify({'error': 'No data loaded'}), 400
-
-        logger.info(f"Starting normalization with data shape: {data_loader.expression_data.shape}")
-
-        # Check if data is microarray
-        logger.info("Detecting data type...")
-        is_microarray = microarray_processor.detect_data_type(
-            data_loader.expression_data,
-            data_loader.platform_info
-        )
-
-        if not is_microarray:
-            logger.error("Dataset is not from a microarray platform")
-            return jsonify({
-                'error': 'Current dataset is not from a microarray platform'
-            }), 400
-
-        # Run preprocessing
-        logger.info(f"Starting preprocessing for {microarray_processor.platform_type} platform...")
-        microarray_processor.preprocess_data()
-        logger.info("Preprocessing completed")
-
-        # Run normalization
-        logger.info("Starting normalization...")
-        microarray_processor.normalize_data()
-        logger.info("Normalization completed")
-
-        # Get results
-        logger.info("Getting normalization results...")
-        stats = microarray_processor.get_serializable_stats()
-        plots = microarray_processor.plots
-
-        # Store normalized data
-        data_loader.normalized_data = microarray_processor.normalized_data.copy()
-        logger.info(f"Normalized data shape: {data_loader.normalized_data.shape}")
-
-        # Print debug information
-        logger.info(f"Stats available: {list(stats.keys())}")
-        logger.info(f"Plots available: {list(plots.keys())}")
-
-        response_data = {
-            'status': 'success',
-            'stats': stats,
-            'plots': plots,
-            'platform_type': microarray_processor.platform_type,
-            'data_shape': {
-                'rows': len(microarray_processor.normalized_data),
-                'columns': len(microarray_processor.normalized_data.columns)
-            }
-        }
-
-        logger.info("Sending response back to client")
-        return jsonify(response_data)
-
-    except Exception as e:
-        logger.error(f"Error in normalization: {str(e)}\n{traceback.format_exc()}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/get_samples')
-def get_samples():
-    try:
-        if not data_loader.is_data_loaded:
-            return jsonify({'error': 'No data loaded'}), 400
-            
+        # Format sample data for response
         samples = []
         for _, row in data_loader.metadata.iterrows():
             samples.append({
-                'accession': row['sample_id'],
+                'sample_id': row['sample_id'],
                 'title': row['title'],
                 'source': row['source']
             })
-            
-        return jsonify({'samples': samples})
-        
-    except Exception as e:
-        logger.error(f"Error getting samples: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/download_normalized_data')
-def download_normalized_data():
-    try:
-        if not hasattr(data_loader, 'normalized_data') or data_loader.normalized_data is None:
-            logger.error("No normalized data available for download")
-            return jsonify({'error': 'No normalized data available'}), 400
-
-        # Create temp directory if it doesn't exist
-        temp_dir = os.path.join(os.getcwd(), 'temp')
-        if not os.path.exists(temp_dir):
-            os.makedirs(temp_dir)
-
-        # Generate filename with timestamp
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f'normalized_data_{timestamp}.csv'
-        filepath = os.path.join(temp_dir, filename)
-
-        # Save normalized data with gene IDs as index
-        logger.info(f"Saving normalized data to {filepath}")
-        data_loader.normalized_data.to_csv(filepath)
-        
-        logger.info("Sending normalized data file")
-        return send_file(
-            filepath,
-            mimetype='text/csv',
-            as_attachment=True,
-            download_name=filename
-        )
-
-    except Exception as e:
-        logger.error(f"Error downloading normalized data: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/get_normalized_sample_data', methods=['POST'])
-def get_normalized_sample_data():
-    try:
-        if data_loader.normalized_data is None:
-            return jsonify({'error': 'No normalized data available'}), 400
-
-        data = request.get_json()
-        sample = data.get('sample')
-        num_rows = int(data.get('rows', 10))
-
-        if sample not in data_loader.normalized_data.columns:
-            return jsonify({'error': 'Invalid sample selected'}), 400
-
-        # Get the sample data
-        sample_data = data_loader.normalized_data[sample].sort_values(ascending=False)
-        
-        # Get top N rows
-        top_data = sample_data.head(num_rows)
-        
-        # Format data for response
-        result = [
-            {'gene_id': gene_id, 'expression': float(expr)}
-            for gene_id, expr in top_data.items()
-        ]
-
-        return jsonify({
-            'data': result,
-            'total_genes': len(sample_data)
-        })
-
-    except Exception as e:
-        logger.error(f"Error getting sample data: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/download_normalized_sample/<sample>')
-def download_normalized_sample(sample):
-    try:
-        if data_loader.normalized_data is None:
-            return jsonify({'error': 'No normalized data available'}), 400
-
-        if sample not in data_loader.normalized_data.columns:
-            return jsonify({'error': 'Invalid sample selected'}), 400
-
-        # Create temp directory if it doesn't exist
-        temp_dir = 'temp'
-        if not os.path.exists(temp_dir):
-            os.makedirs(temp_dir)
-
-        # Generate filename with timestamp
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f'normalized_sample_{sample}_{timestamp}.csv'
-        filepath = os.path.join(temp_dir, filename)
-
-        # Save sample data
-        sample_data = data_loader.normalized_data[[sample]]
-        sample_data.to_csv(filepath)
-
-        return send_file(
-            filepath,
-            mimetype='text/csv',
-            as_attachment=True,
-            download_name=filename
-        )
-
-    except Exception as e:
-        logger.error(f"Error downloading sample data: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/deg_analysis')
-def deg_analysis_page():
-    try:
-        # Detailed logging of data state
-        logger.info("Starting DEG analysis page load")
-        logger.info(f"Data loader state - Normalized data exists: {data_loader.normalized_data is not None}")
-        logger.info(f"Data loader state - Sample info exists: {data_loader.sample_info is not None}")
-        
-        if data_loader.normalized_data is None:
-            logger.error("No normalized data available for DEG analysis")
-            flash('Please complete normalization first.', 'warning')
-            return redirect(url_for('normalization_page'))
-
-        if data_loader.sample_info is None:
-            logger.error("No sample information available for DEG analysis")
-            flash('Sample information is missing.', 'warning')
-            return redirect(url_for('normalization_page'))
-
-        # Log data details
-        logger.info(f"Normalized data shape: {data_loader.normalized_data.shape}")
-        logger.info(f"Sample info length: {len(data_loader.sample_info)}")
-        logger.info(f"Normalized data columns: {list(data_loader.normalized_data.columns)}")
-        logger.info(f"Sample info keys: {list(data_loader.sample_info.keys())}")
-
-        try:
-            # Attempt to load data into DEG analyzer with explicit error catching
-            success = deg_analyzer.load_data(
-                normalized_data=data_loader.normalized_data.copy(),  # Make a copy to prevent modifications
-                sample_info=data_loader.sample_info.copy()
-            )
-            
-            if success:
-                logger.info("Data successfully loaded into DEG analyzer")
-                return render_template('deg_analysis.html')
-            else:
-                logger.error("DEG analyzer reported failure in load_data")
-                flash('Failed to initialize DEG analysis.', 'error')
-                return redirect(url_for('normalization_page'))
-
-        except Exception as load_error:
-            logger.error(f"Error during DEG analyzer load_data: {str(load_error)}")
-            flash(f'Error loading data into DEG analyzer: {str(load_error)}', 'error')
-            return redirect(url_for('normalization_page'))
-
-    except Exception as e:
-        logger.error(f"Error in DEG analysis page: {str(e)}")
-        flash('Error loading DEG analysis. Please ensure data is properly normalized.', 'error')
-        return redirect(url_for('normalization_page'))
-
-@app.route('/get_sample_info')
-def get_sample_info():
-    try:
-        if data_loader.normalized_data is None:
-            return jsonify({
-                'status': 'error',
-                'error': 'No normalized data available'
-            }), 400
 
         return jsonify({
             'status': 'success',
-            'samples': list(data_loader.normalized_data.columns)
+            'data': {
+                'samples': samples,
+                'total_samples': len(samples),
+                'total_features': len(data_loader.expression_data.index)
+            }
         })
 
     except Exception as e:
-        logger.error(f"Error getting sample info: {str(e)}")
+        logger.error(f"Error in fetch_geo_data: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/run_selected_qc', methods=['POST'])
+def run_selected_qc():
+    try:
+        if not data_loader.is_data_loaded:
+            return jsonify({
+                'status': 'error',
+                'error': 'No data loaded'
+            }), 400
+
+        # Get groups from request
+        data = request.get_json()
+        if not data or 'groups' not in data:
+            return jsonify({
+                'status': 'error',
+                'error': 'No groups provided'
+            }), 400
+
+        groups = data['groups']
+        
+        # Validate groups
+        if not groups['group1']['samples'] or not groups['group2']['samples']:
+            return jsonify({
+                'status': 'error',
+                'error': 'Both groups must have samples'
+            }), 400
+
+        # Save group assignments
+        success = data_loader.update_sample_groups({
+            'group1': groups['group1']['samples'],
+            'group2': groups['group2']['samples']
+        })
+        
+        if not success:
+            return jsonify({
+                'status': 'error',
+                'error': 'Failed to update groups'
+            }), 400
+
+        # Run QC analysis
+        from modules.qc_analyzer import run_qc_analysis
+        
+        # Get data for selected samples
+        selected_samples = {
+            'group1': groups['group1']['samples'],
+            'group2': groups['group2']['samples']
+        }
+        qc_results = run_qc_analysis(data_loader.expression_data, selected_samples)
+
+        if qc_results:
+            # Save QC state
+            data_loader.workflow_state['qc_completed'] = True
+            
+            # Save group data and QC results to files
+            os.makedirs('temp', exist_ok=True)
+            
+            # Save raw data files
+            for group_name, samples in selected_samples.items():
+                data_loader.expression_data[samples].to_csv(f'temp/{group_name}_raw_data.csv')
+            
+            # Save QC results without plots
+            qc_data = {}
+            for group_name, group_results in qc_results.items():
+                # Save plots separately
+                plots_data = group_results.pop('plots', {})
+                for plot_name, plot_data in plots_data.items():
+                    plot_file = f'temp/{group_name}_{plot_name}.png'
+                    with open(plot_file, 'wb') as f:
+                        import base64
+                        f.write(base64.b64decode(plot_data))
+                
+                # Store metrics and plot file paths
+                qc_data[group_name] = {
+                    'metrics': group_results['metrics'],
+                    'plot_files': {
+                        plot_name: f'{group_name}_{plot_name}.png'
+                        for plot_name in plots_data.keys()
+                    }
+                }
+            
+            # Save QC data to file
+            with open('temp/qc_results.json', 'w') as f:
+                json.dump(qc_data, f)
+
+            return jsonify({
+                'status': 'success',
+                'message': 'QC analysis completed'
+            })
+        else:
+            return jsonify({
+                'status': 'error',
+                'error': 'QC analysis failed'
+            }), 500
+
+    except Exception as e:
+        logger.error(f"Error in run_selected_qc: {str(e)}")
         return jsonify({
             'status': 'error',
             'error': str(e)
         }), 500
 
-@app.route('/run_deg_analysis', methods=['POST'])
-def run_deg_analysis():
+@app.route('/qc_results')
+def qc_results():
     try:
-        data = request.get_json()
-        groups = data.get('groups')
-        group1 = data.get('group1')  # Control group
-        group2 = data.get('group2')  # Treatment group
+        # Load QC results from file
+        try:
+            with open('temp/qc_results.json', 'r') as f:
+                qc_data = json.load(f)
+        except FileNotFoundError:
+            return redirect('/')
+            
+        return render_template('qc_results.html', qc_data=qc_data, get_quality_class=get_quality_class)
+    except Exception as e:
+        logger.error(f"Error displaying QC results: {str(e)}")
+        return redirect('/')
 
-        if not all([groups, group1, group2]):
+@app.route('/normalization')
+def normalization():
+    if not data_loader.workflow_state['qc_completed']:
+        return redirect('/')
+    return render_template('normalization.html')
+
+@app.route('/temp/<path:filename>')
+def serve_temp_file(filename):
+    """Serve files from temp directory"""
+    return send_from_directory('temp', filename)
+
+@app.route('/get_group_info')
+def get_group_info():
+    try:
+        if not data_loader.is_data_loaded:
             return jsonify({
                 'status': 'error',
-                'error': 'Missing required parameters'
+                'error': 'No data loaded'
             }), 400
-
-        # Update group annotations
-        success = deg_analyzer.update_group_annotations(groups)
-        if not success:
-            return jsonify({
-                'status': 'error',
-                'error': 'Failed to update group annotations'
-            }), 500
-
-        # Run DEG analysis
-        success = deg_analyzer.run_differential_expression(group1, group2)
-        if not success:
-            return jsonify({
-                'status': 'error',
-                'error': 'Failed to run differential expression analysis'
-            }), 500
-
-        # Get summary statistics
-        summary_stats = deg_analyzer.get_summary_stats()
-        if not summary_stats:
-            return jsonify({
-                'status': 'error',
-                'error': 'Failed to generate summary statistics'
-            }), 500
 
         return jsonify({
             'status': 'success',
-            'summary': summary_stats,
-            'plots': deg_analyzer.plots
+            'groups': data_loader.get_group_samples()
         })
 
+    except Exception as e:
+        logger.error(f"Error getting group info: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'error': str(e)
+        }), 500
+
+@app.route('/run_normalization', methods=['POST'])
+def run_normalization():
+    try:
+        # Clean temp directory except qc_results.json
+        for file in os.listdir('temp'):
+            if file != 'qc_results.json':
+                os.remove(os.path.join('temp', file))
+
+        if not data_loader.workflow_state['qc_completed']:
+            return jsonify({
+                'status': 'error',
+                'error': 'Please complete QC analysis first'
+            }), 400
+
+        method = request.json.get('method', 'quantile')
+        if method not in ['quantile', 'zscore', 'log2']:
+            return jsonify({
+                'status': 'error',
+                'error': 'Invalid normalization method'
+            }), 400
+
+        # Get group data
+        groups = data_loader.get_group_samples()
+        if not groups['group1'] or not groups['group2']:
+            return jsonify({
+                'status': 'error',
+                'error': 'Missing group data'
+            }), 400
+
+        # Run normalization
+        success = data_loader.normalize_group_data(method)
+        if not success:
+            return jsonify({
+                'status': 'error',
+                'error': 'Normalization failed'
+            }), 400
+
+        # Generate plots
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+        from io import BytesIO
+        import base64
+
+        plots = {}
+
+        # Box plots before normalization
+        plt.figure(figsize=(12, 6))
+        sns.boxplot(data=data_loader.expression_data)
+        plt.xticks(rotation=45, ha='right')
+        plt.title('Expression Distribution Before Normalization')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png', dpi=100, bbox_inches='tight')
+        buffer.seek(0)
+        plots['before_boxplot'] = base64.b64encode(buffer.getvalue()).decode()
+        plt.close()
+
+        # Box plots after normalization
+        plt.figure(figsize=(12, 6))
+        sns.boxplot(data=data_loader.normalized_data)
+        plt.xticks(rotation=45, ha='right')
+        plt.title('Expression Distribution After Normalization')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png', dpi=100, bbox_inches='tight')
+        buffer.seek(0)
+        plots['after_boxplot'] = base64.b64encode(buffer.getvalue()).decode()
+        plt.close()
+
+        # Density plots before normalization
+        plt.figure(figsize=(12, 6))
+        for col in data_loader.expression_data.columns:
+            sns.kdeplot(data=data_loader.expression_data[col].dropna(), label=col)
+        plt.title('Expression Density Before Normalization')
+        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png', dpi=100, bbox_inches='tight')
+        buffer.seek(0)
+        plots['before_density'] = base64.b64encode(buffer.getvalue()).decode()
+        plt.close()
+
+        # Density plots after normalization
+        plt.figure(figsize=(12, 6))
+        for col in data_loader.normalized_data.columns:
+            sns.kdeplot(data=data_loader.normalized_data[col].dropna(), label=col)
+        plt.title('Expression Density After Normalization')
+        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.tight_layout()
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png', dpi=100, bbox_inches='tight')
+        buffer.seek(0)
+        plots['after_density'] = base64.b64encode(buffer.getvalue()).decode()
+        plt.close()
+
+        # Get statistics
+        stats = {
+            'before': {
+                'mean': float(data_loader.expression_data.mean().mean()),
+                'std': float(data_loader.expression_data.std().mean()),
+                'min': float(data_loader.expression_data.min().min()),
+                'max': float(data_loader.expression_data.max().max())
+            },
+            'after': {
+                'mean': float(data_loader.normalized_data.mean().mean()),
+                'std': float(data_loader.normalized_data.std().mean()),
+                'min': float(data_loader.normalized_data.min().min()),
+                'max': float(data_loader.normalized_data.max().max())
+            }
+        }
+
+        # Save normalized data for each group
+        group1_data = data_loader.normalized_data[groups['group1']]
+        group2_data = data_loader.normalized_data[groups['group2']]
+        
+        group1_file = 'temp/group1_normalized.csv'
+        group2_file = 'temp/group2_normalized.csv'
+        
+        group1_data.to_csv(group1_file)
+        group2_data.to_csv(group2_file)
+
+        return jsonify({
+            'status': 'success',
+            'message': 'Normalization completed',
+            'stats': stats,
+            'plots': plots,
+            'files': {
+                'group1': group1_file,
+                'group2': group2_file
+            }
+        })
+
+    except Exception as e:
+        logger.error(f"Error in normalization: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'error': str(e)
+        }), 500
+
+@app.route('/deg_analysis')
+def deg_analysis_page():
+    return render_template('deg_analysis.html')
+
+def get_gene_mapping(probe_ids, platform_id):
+    """Get gene symbols using biomart based on platform information."""
+    try:
+        # Initialize mapping dictionary
+        gene_mapping = {}
+        
+        if not platform_id:
+            logger.warning("No platform ID provided")
+            return gene_mapping
+            
+        logger.info(f"Getting gene mapping for platform: {platform_id}")
+        
+        # First try GEO platform annotation
+        try:
+            platform_data = get_GEO(platform_id)
+            if hasattr(platform_data, 'table'):
+                table = platform_data.table
+                if 'ID' in table.columns:
+                    symbol_col = next((col for col in [
+                        'Gene Symbol', 'Gene_Symbol', 'GENE_SYMBOL', 
+                        'gene_symbol', 'Symbol', 'SYMBOL'
+                    ] if col in table.columns), None)
+                    
+                    if symbol_col:
+                        logger.info(f"Using GEO annotation with column: {symbol_col}")
+                        gene_mapping = dict(zip(table['ID'], table[symbol_col]))
+                        # Clean up mapping
+                        gene_mapping = {k: str(v).split('///')[0].strip() 
+                                     for k, v in gene_mapping.items() 
+                                     if v and str(v).strip() != 'nan'}
+                        return gene_mapping
+        except Exception as e:
+            logger.warning(f"Error loading GEO platform data: {str(e)}")
+        
+        # If GEO mapping failed, try biomart
+        # Determine the correct biomart dataset and attribute based on platform
+        platform_to_biomart = {
+            'GPL570': ('affy_hg_u133_plus_2', 'hsapiens_gene_ensembl'),  # HG-U133_Plus_2
+            'GPL96': ('affy_hg_u133a', 'hsapiens_gene_ensembl'),         # HG-U133A
+            'GPL97': ('affy_hg_u133b', 'hsapiens_gene_ensembl'),         # HG-U133B
+            'GPL571': ('affy_hg_u133a_2', 'hsapiens_gene_ensembl'),      # HG-U133A_2
+            'GPL1261': ('illumina_mousewgdna_6', 'mmusculus_gene_ensembl'),  # Illumina MouseWG-6
+            'GPL6887': ('illumina_humanht_12', 'hsapiens_gene_ensembl'),  # Illumina HumanHT-12
+            'GPL6947': ('illumina_humanref_8', 'hsapiens_gene_ensembl'),  # Illumina HumanRef-8
+            'GPL8321': ('illumina_ratref_12', 'rnorvegicus_gene_ensembl'),  # Illumina RatRef-12
+            'GPL13534': ('illumina_humanht_12_v4', 'hsapiens_gene_ensembl'),  # Illumina HumanHT-12 V4
+            'GPL6244': ('affy_hugene_1_0_st_v1', 'hsapiens_gene_ensembl'),  # HuGene-1_0-st
+            'GPL11154': ('affy_hugene_2_0_st_v1', 'hsapiens_gene_ensembl'),  # HuGene-2_0-st
+        }
+        
+        if platform_id not in platform_to_biomart:
+            logger.warning(f"Platform {platform_id} not supported for biomart mapping")
+            return gene_mapping
+            
+        array_type, dataset_name = platform_to_biomart[platform_id]
+        logger.info(f"Using biomart mapping: {array_type} -> {dataset_name}")
+        
+        # Connect to biomart
+        try:
+            server = BiomartServer("http://ensembl.org/biomart")
+            dataset = server.datasets[dataset_name]
+            
+            # Split probe_ids into chunks to avoid too long requests
+            chunk_size = 100
+            for i in range(0, len(probe_ids), chunk_size):
+                chunk = probe_ids[i:i + chunk_size]
+                
+                # Prepare the query
+                response = dataset.search({
+                    'attributes': [array_type, 'external_gene_name'],
+                    'filters': {array_type: chunk}
+                })
+                
+                # Process results
+                for line in response.iter_lines():
+                    line = line.decode('utf-8').strip().split('\t')
+                    if len(line) >= 2:
+                        probe_id, gene_name = line
+                        if gene_name:  # Only add if gene name is not empty
+                            gene_mapping[probe_id] = gene_name
+                
+            logger.info(f"Successfully mapped {len(gene_mapping)} genes using biomart")
+            return gene_mapping
+            
+        except Exception as e:
+            logger.error(f"Error in biomart mapping: {str(e)}")
+            return gene_mapping
+        
+    except Exception as e:
+        logger.error(f"Error in gene mapping: {str(e)}")
+        return {}
+
+@app.route('/run_deg_analysis', methods=['POST'])
+def run_deg_analysis():
+    try:
+        # Get parameters from request
+        params = request.json
+        control_group = params.get('control_group')
+        treatment_group = params.get('treatment_group')
+        pval_threshold = float(params.get('pval_threshold', 0.05))
+        log2fc_threshold = float(params.get('log2fc_threshold', 1))
+        top_genes = int(params.get('top_genes', 10))
+
+        # Load QC results to get platform ID
+        platform_id = None
+        try:
+            with open('temp/qc_results.json', 'r') as f:
+                qc_data = json.load(f)
+                platform_id = qc_data.get('platform_id', '').strip()
+                logger.info(f"Found platform ID: {platform_id}")
+        except Exception as e:
+            logger.warning(f"Could not load platform info: {str(e)}")
+
+        # Check if normalized files exist
+        control_file = f'temp/{control_group}_normalized.csv'
+        treatment_file = f'temp/{treatment_group}_normalized.csv'
+        
+        if not (os.path.exists(control_file) and os.path.exists(treatment_file)):
+            return jsonify({
+                'status': 'error',
+                'error': 'Normalized data not found. Please complete normalization first.'
+            }), 400
+
+        # Load normalized data
+        control_data = pd.read_csv(control_file, index_col=0)
+        treatment_data = pd.read_csv(treatment_file, index_col=0)
+
+        # Get gene mapping
+        probe_ids = list(control_data.index)
+        gene_mapping = get_gene_mapping(probe_ids, platform_id)
+        
+        if not gene_mapping:
+            logger.warning("No gene mapping found, using probe IDs as gene symbols")
+            gene_mapping = {probe_id: probe_id for probe_id in probe_ids}
+
+        # Perform t-test for each gene
+        results = []
+        for gene in control_data.index:
+            control_values = control_data.loc[gene].astype(float)
+            treatment_values = treatment_data.loc[gene].astype(float)
+            
+            # Skip if all values are identical or contain NaN
+            if (control_values.isna().any() or treatment_values.isna().any() or
+                (control_values == control_values.iloc[0]).all() or
+                (treatment_values == treatment_values.iloc[0]).all()):
+                continue
+            
+            try:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    t_stat, p_val = stats.ttest_ind(control_values, treatment_values)
+            except Exception as e:
+                logger.warning(f"Error in t-test for gene {gene}: {str(e)}")
+                continue
+
+            mean_control = np.mean(control_values)
+            mean_treatment = np.mean(treatment_values)
+            
+            # Calculate log2fc with safety checks
+            if mean_control <= 0 or mean_treatment <= 0:
+                log2fc = 0
+            else:
+                log2fc = np.log2(mean_treatment / mean_control)
+            
+            # Get gene symbol from mapping
+            gene_symbol = gene_mapping.get(gene, gene)
+            
+            results.append({
+                'probe_id': gene,
+                'gene_symbol': gene_symbol,
+                'log2fc': log2fc,
+                'pvalue': p_val,
+                'mean_control': mean_control,
+                'mean_treatment': mean_treatment
+            })
+
+        if not results:
+            return jsonify({
+                'status': 'error',
+                'error': 'No valid genes for analysis after filtering'
+            }), 400
+
+        # Create results DataFrame
+        deg_results = pd.DataFrame(results)
+        
+        # Multiple testing correction
+        deg_results['padj'] = multipletests(deg_results['pvalue'], method='fdr_bh')[1]
+        
+        # Sort by adjusted p-value
+        deg_results = deg_results.sort_values('padj')
+        
+        # Generate plots
+        plots = {}
+        
+        # Volcano plot with custom thresholds
+        plt.figure(figsize=(10, 8))
+        scatter = plt.scatter(deg_results['log2fc'], 
+                   -np.log10(deg_results['padj']), 
+                   alpha=0.5,
+                   c=((abs(deg_results['log2fc']) >= log2fc_threshold) & 
+                      (deg_results['padj'] <= pval_threshold)).map({True: 'red', False: 'grey'}))
+        
+        plt.axhline(y=-np.log10(pval_threshold), color='r', linestyle='--', alpha=0.5)
+        plt.axvline(x=-log2fc_threshold, color='r', linestyle='--', alpha=0.5)
+        plt.axvline(x=log2fc_threshold, color='r', linestyle='--', alpha=0.5)
+        plt.xlabel('Log2 Fold Change')
+        plt.ylabel('-log10(Adjusted P-value)')
+        plt.title(f'Volcano Plot\n{treatment_group} vs {control_group}')
+        
+        # Add gene labels for significant genes
+        significant = deg_results[
+            (deg_results['padj'] <= pval_threshold) & 
+            (abs(deg_results['log2fc']) >= log2fc_threshold)
+        ].head(top_genes)
+        
+        for _, gene in significant.iterrows():
+            label = gene['gene_symbol'] if gene['gene_symbol'] != gene['probe_id'] else gene['probe_id']
+            plt.annotate(label, 
+                        (gene['log2fc'], -np.log10(gene['padj'])),
+                        xytext=(5, 5), textcoords='offset points',
+                        fontsize=8)
+        
+        buffer = BytesIO()
+        plt.savefig(buffer, format='png', dpi=100, bbox_inches='tight')
+        buffer.seek(0)
+        plots['volcano'] = base64.b64encode(buffer.getvalue()).decode()
+        plt.close()
+        
+        # Heatmap of top DEGs
+        significant_genes = deg_results[
+            (deg_results['padj'] <= pval_threshold) & 
+            (abs(deg_results['log2fc']) >= log2fc_threshold)
+        ]['probe_id'].tolist()
+        
+        if len(significant_genes) > 50:
+            significant_genes = significant_genes[:50]
+        
+        if significant_genes:
+            combined_data = pd.concat([
+                control_data.loc[significant_genes],
+                treatment_data.loc[significant_genes]
+            ], axis=1)
+            
+            # Create row labels with gene symbols
+            row_labels = [f"{idx} ({gene_mapping.get(idx, idx)})" for idx in combined_data.index]
+            
+            plt.figure(figsize=(12, 8))
+            g = sns.clustermap(combined_data,
+                          cmap='RdBu_r',
+                          center=0,
+                          figsize=(12, 8),
+                          dendrogram_ratio=(.1, .2),
+                          cbar_pos=(0.02, .2, .03, .4),
+                          yticklabels=row_labels)
+            plt.suptitle(f'Top DEGs Heatmap: {treatment_group} vs {control_group}', y=1.02)
+            
+            buffer = BytesIO()
+            plt.savefig(buffer, format='png', dpi=100, bbox_inches='tight')
+            buffer.seek(0)
+            plots['heatmap'] = base64.b64encode(buffer.getvalue()).decode()
+            plt.close()
+        
+        # Summary statistics
+        total_genes = len(deg_results)
+        sig_genes = len(deg_results[
+            (deg_results['padj'] <= pval_threshold) & 
+            (abs(deg_results['log2fc']) >= log2fc_threshold)
+        ])
+        up_regulated = len(deg_results[
+            (deg_results['padj'] <= pval_threshold) & 
+            (deg_results['log2fc'] >= log2fc_threshold)
+        ])
+        down_regulated = len(deg_results[
+            (deg_results['padj'] <= pval_threshold) & 
+            (deg_results['log2fc'] <= -log2fc_threshold)
+        ])
+        
+        # Prepare CSV data
+        # Reorder columns for better readability
+        column_order = [
+            'probe_id', 'gene_symbol', 'log2fc', 'pvalue', 'padj',
+            'mean_control', 'mean_treatment'
+        ]
+        deg_results = deg_results[column_order]
+        
+        csv_buffer = StringIO()
+        deg_results.to_csv(csv_buffer)
+        csv_data = csv_buffer.getvalue()
+        
+        return jsonify({
+            'status': 'success',
+            'plots': plots,
+            'summary': {
+                'total_genes': total_genes,
+                'significant_genes': sig_genes,
+                'up_regulated': up_regulated,
+                'down_regulated': down_regulated
+            },
+            'csv_data': csv_data
+        })
+        
     except Exception as e:
         logger.error(f"Error in DEG analysis: {str(e)}")
         return jsonify({
             'status': 'error',
             'error': str(e)
-        }), 500
-
-@app.route('/download_deg_results')
-def download_deg_results():
-    try:
-        if deg_analyzer.results is None:
-            return jsonify({'error': 'No DEG results available'}), 400
-
-        # Create temp directory if it doesn't exist
-        temp_dir = os.path.join(os.getcwd(), 'temp')
-        if not os.path.exists(temp_dir):
-            os.makedirs(temp_dir)
-
-        # Generate filename with timestamp
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f'deg_results_{timestamp}.csv'
-        filepath = os.path.join(temp_dir, filename)
-
-        # Save results
-        deg_analyzer.results.to_csv(filepath, index=False)
-
-        return send_file(
-            filepath,
-            mimetype='text/csv',
-            as_attachment=True,
-            download_name=filename
-        )
-
-    except Exception as e:
-        logger.error(f"Error downloading DEG results: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/fetch_geo_data', methods=['POST'])
-def fetch_geo_data():
-    try:
-        data = request.get_json()
-        geo_id = data.get('geo_id')
-        
-        if not geo_id or not re.match(r'^GSE[0-9]+$', geo_id):
-            return jsonify({'error': 'Invalid GEO ID format'}), 400
-
-        logger.info(f"Fetching GEO dataset: {geo_id}")
-        
-        success = data_loader.load_from_geo(geo_id)
-        
-        if not success:
-            return jsonify({'error': 'Failed to fetch GEO dataset'}), 400
-
-        # Calculate QC metrics
-        missing_values = data_loader.expression_data.isnull().sum().sum() / (data_loader.expression_data.shape[0] * data_loader.expression_data.shape[1]) * 100
-        value_range = f"{data_loader.expression_data.min().min():.2f} - {data_loader.expression_data.max().max():.2f}"
-
-        return jsonify({
-            'status': 'success',
-            'data': {
-                'title': data_loader.platform_info.get('title', 'Not available'),
-                'platform': data_loader.platform_info.get('technology', 'Not available'),
-                'sample_count': len(data_loader.metadata) if data_loader.metadata is not None else 0,
-                'organism': data_loader.platform_info.get('organism', 'Not available'),
-                'samples': data_loader.metadata.to_dict('records'),
-                'qc': {
-                    'missing_values': f"{missing_values:.2f}",
-                    'value_range': value_range,
-                    'distribution': 'Normal'  # You might want to calculate this based on your data
-                }
-            }
-        })
-
-    except Exception as e:
-        logger.error(f"Error fetching GEO data: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/normalize_data', methods=['POST'])
-def normalize_data():
-    try:
-        method = request.json.get('method', 'quantile')
-        logger.info(f"Starting normalization with method: {method}")
-
-        # Perform normalization
-        normalized_data = normalizer.normalize(data_loader.expression_data, method=method)
-        
-        # Save normalized data to data_loader
-        data_loader.normalized_data = normalized_data
-        
-        # Log success
-        logger.info("Normalization completed successfully")
-        logger.info(f"Normalized data shape: {normalized_data.shape}")
-
-        return jsonify({
-            'status': 'success',
-            'message': 'Data normalized successfully'
-        })
-
-    except Exception as e:
-        logger.error(f"Error during normalization: {str(e)}")
-        return jsonify({
-            'status': 'error',
-            'message': str(e)
         }), 500
 
 if __name__ == '__main__':

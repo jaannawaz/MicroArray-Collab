@@ -16,6 +16,7 @@ from io import StringIO
 import warnings
 from GEOparse import get_GEO
 from biomart import BiomartServer
+from utils.platform_config import get_platform_config
 
 app = Flask(__name__)
 # Set a secret key for session management
@@ -676,4 +677,10 @@ def run_deg_analysis():
         }), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    config = get_platform_config()
+    print(f"Starting server on {config['host']}:{config['port']}")
+    app.run(
+        host=config['host'],
+        port=config['port'],
+        debug=config['debug']
+    )

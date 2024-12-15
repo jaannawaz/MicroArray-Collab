@@ -10,8 +10,8 @@ def is_colab():
 def get_platform_config():
     if is_colab():
         return {
-            'host': 'localhost',
-            'port': 8888,
+            'host': '0.0.0.0',  # Allow external connections
+            'port': 8888,       # Colab-friendly port
             'debug': True
         }
     elif os.environ.get('RENDER'):  # For Render
@@ -22,7 +22,7 @@ def get_platform_config():
         }
     else:  # Local development
         return {
-            'host': '0.0.0.0',  # Allow external connections
-            'port': 5001,       # Change to a different port
+            'host': '0.0.0.0',
+            'port': 5001,
             'debug': True
         } 
